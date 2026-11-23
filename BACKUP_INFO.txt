@@ -1,0 +1,6 @@
+﻿VORTEX Phase 7 handoff backup
+Created: 2026-11-20 03:57:04
+Source: C:\Users\ZIAD\Desktop\vortex-source\vortex
+Files: 169
+Excluded folders: node_modules, dist, .git
+Contains .env files: True (secrets: do not share)

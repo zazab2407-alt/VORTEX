@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-white font-sans text-neutral-900 antialiased; }
+  h1, h2, h3, h4 { @apply font-display uppercase tracking-tight; }
+  ::selection { background: #FF5A1F; color: #fff; }
+}
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-none px-7 py-3.5 font-display text-lg font-bold uppercase tracking-wider transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-primary { @apply bg-brand text-white hover:bg-brand-dark hover:shadow-lg hover:shadow-brand/30; }
+  .btn-dark { @apply bg-neutral-950 text-white hover:bg-neutral-800; }
+  .btn-outline { @apply border-2 border-neutral-950 text-neutral-950 hover:bg-neutral-950 hover:text-white; }
+  .btn-outline-light { @apply border-2 border-white text-white hover:bg-white hover:text-neutral-950; }
+  .container-x { @apply mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-10; }
+  .input { @apply w-full border border-neutral-300 bg-white px-4 py-3 text-sm outline-none transition-colors placeholder:text-neutral-400 focus:border-neutral-950; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+input[type='range'] { -webkit-appearance: none; appearance: none; height: 18px; background: transparent; cursor: pointer; }
+input[type='range']::-webkit-slider-runnable-track { height: 4px; background: #e5e5e5; border-radius: 9999px; }
+input[type='range']::-moz-range-track { height: 4px; background: #e5e5e5; border-radius: 9999px; }
+input[type='range']::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 9999px; background: #FF5A1F; border: 2px solid #fff; box-shadow: 0 0 0 1px #FF5A1F; }
+input[type='range']::-moz-range-thumb { width: 14px; height: 14px; border-radius: 9999px; background: #FF5A1F; border: 2px solid #fff; box-shadow: 0 0 0 1px #FF5A1F; }
