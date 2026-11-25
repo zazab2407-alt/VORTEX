@@ -1,0 +1,97 @@
+// Downloads the licensed photos listed in src/seed/imageManifest.json, crops them to a fixed aspect ratio, re-encodes them as
+// WebP and saves them under client/public/images/. Also regenerates handoff/IMAGE_LICENSES.md from the manifest.
+//
+//   npm run images:fetch                      downloads whatever is missing (existing files are kept)
+//   npm run images:fetch -- --force           re-downloads everything
+//   npm run images:fetch -- --only=<slug>     only that product / category / site key
+//
+// Needs internet. Only unsplash.com hosts are accepted. Nothing outside client/public/images and handoff/ is written.
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
+import { PROFILES, productImagePath, categoryImagePath, siteImagePath, smallVariant } from '../src/seed/imagePaths.js';
+
+const ROOT = fileURLToPath(new URL('../../', import.meta.url));
+const PUBLIC = path.join(ROOT, 'client/public');
+const MANIFEST = path.join(ROOT, 'server/src/seed/imageManifest.json');
+const LICENSES = path.join(ROOT, 'handoff/IMAGE_LICENSES.md');
+const force = process.argv.includes('--force');
+const only = process.argv.find((a) => a.startsWith('--only='))?.slice(7);
+const ID = /^[A-Za-z0-9_-]{11}$/;
+
+const manifest = JSON.parse(await fs.readFile(MANIFEST, 'utf8'));
+
+/** Flattens the manifest into one job per output image. */
+const jobs = [];
+for (const [slug, list] of Object.entries(manifest.products)) list.forEach((e, i) => jobs.push({ group: 'product', key: slug, entry: e, web: productImagePath(slug, i + 1), ...PROFILES.product }));
+for (const [slug, e] of Object.entries(manifest.categories)) jobs.push({ group: 'category', key: slug, entry: e, web: categoryImagePath(slug), ...PROFILES.category });
+for (const [key, e] of Object.entries(manifest.site)) jobs.push({ group: 'site', key, entry: e, web: siteImagePath(key), w: e.w, h: e.h, smW: Math.round(e.w / 2), smH: Math.round(e.h / 2) });
+
+// Fail early on a bad manifest: nothing is downloaded until every entry is valid.
+const problems = [];
+const seen = new Map();
+for (const j of jobs) {
+  const e = j.entry, where = `${j.group}/${j.key}`;
+  if (!ID.test(e.unsplash ?? '')) problems.push(`${where}: "unsplash" must be an 11-character photo ID`);
+  if (!e.author || !e.alt) problems.push(`${where}: "author" and "alt" are required (the licence record and the alt text come from them)`);
+  if (j.group === 'site' && !(e.w > 0 && e.h > 0)) problems.push(`${where}: site images need "w" and "h"`);
+  if (seen.has(e.unsplash)) problems.push(`${where}: photo ${e.unsplash} is already used by ${seen.get(e.unsplash)} (one photo per image, no duplicates)`);
+  seen.set(e.unsplash, where);
+}
+if (problems.length) { console.error('imageManifest.json has problems:\n - ' + problems.join('\n - ')); process.exit(1); }
+
+const exists = (p) => fs.access(p).then(() => true, () => false);
+async function download(id) {
+  const url = `https://unsplash.com/photos/${id}/download?force=true`;
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const res = await fetch(url, { redirect: 'follow', headers: { 'user-agent': 'vortex-image-fetch/1.0' } });
+      const host = new URL(res.url).hostname;
+      if (!res.ok || !host.endsWith('unsplash.com') || !(res.headers.get('content-type') ?? '').startsWith('image/')) throw new Error(`HTTP ${res.status} from ${host}`);
+      return Buffer.from(await res.arrayBuffer());
+    } catch (err) {
+      if (attempt >= 3) throw err;
+      await new Promise((r) => setTimeout(r, 1500 * attempt));
+    }
+  }
+}
+
+let done = 0, kept = 0, failed = 0;
+for (const j of jobs) {
+  if (only && j.key !== only) continue;
+  const main = path.join(PUBLIC, j.web), small = path.join(PUBLIC, smallVariant(j.web));
+  if (!force && await exists(main) && await exists(small)) { kept++; continue; }
+  try {
+    const src = await download(j.entry.unsplash);
+    const meta = await sharp(src).metadata();
+    if (meta.width < j.w || meta.height < j.h) console.warn(`  note: ${j.web} source is ${meta.width}x${meta.height}, smaller than ${j.w}x${j.h}; it will be scaled up`);
+    await fs.mkdir(path.dirname(main), { recursive: true });
+    const base = sharp(src).rotate().resize({ width: j.w, height: j.h, fit: 'cover', position: sharp.strategy.attention });
+    await base.clone().webp({ quality: 80, effort: 5 }).toFile(main);
+    await base.clone().resize({ width: j.smW, height: j.smH }).webp({ quality: 78, effort: 5 }).toFile(small);
+    done++; console.log(`  saved ${j.web}  (${j.entry.alt})`);
+  } catch (err) { failed++; console.error(`  FAILED ${j.web}: ${err.message}`); }
+}
+
+// Licence record: every manifest entry whose file now exists.
+const rows = [];
+for (const j of jobs) if (await exists(path.join(PUBLIC, j.web))) rows.push(j);
+const esc = (s) => String(s).replace(/\|/g, '\\|');
+const md = [
+  '# Image licences and sources',
+  '',
+  '_Generated by `npm run images:fetch` (server/scripts/fetch-images.mjs) from `server/src/seed/imageManifest.json`. Do not edit by hand._',
+  '',
+  manifest.license,
+  '',
+  `Photos listed: ${rows.length}. Every file is a cropped, re-encoded WebP copy hosted in \`client/public/images/\`; nothing is hotlinked.`,
+  '',
+  '| Local file | Subject | Photographer | Source page | Licence |',
+  '|---|---|---|---|---|',
+  ...rows.map((j) => `| \`${j.web}\` | ${esc(j.entry.alt)} | ${esc(j.entry.author)} | https://unsplash.com/photos/${j.entry.unsplash} | Unsplash License |`),
+  '',
+].join('\n');
+await fs.writeFile(LICENSES, md, 'utf8');
+console.log(`\nDone: ${done} saved, ${kept} already present, ${failed} failed. Licence record: handoff/IMAGE_LICENSES.md (${rows.length} photos).`);
+process.exit(failed ? 1 : 0);
