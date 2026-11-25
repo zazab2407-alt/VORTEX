@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { productService } from '../services/api';
 import { useAsync } from '../hooks/useAsync';
+import { useShopConfig } from '../hooks/useShopConfig';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import type { Gender, ProductFilters, SortOption } from '../types';
 import FilterPanel, { PRICE_MAX, PRICE_MIN } from '../components/FilterPanel';
@@ -23,6 +24,7 @@ export default function Shop() {
   const [params, setParams] = useSearchParams();
   const [drawer, setDrawer] = useState(false);
   const gridTop = useRef<HTMLDivElement>(null);
+  const { currencySymbol } = useShopConfig();
 
   const filters: ProductFilters = useMemo(() => {
     const num = (k: string) => (params.get(k) ? Number(params.get(k)) : undefined);
@@ -87,7 +89,7 @@ export default function Shop() {
     filters.category && { label: filters.category, clear: { category: undefined } },
     filters.size && { label: `Size ${filters.size}`, clear: { size: undefined } },
     filters.color && { label: filters.color, clear: { color: undefined } },
-    (filters.minPrice !== undefined || filters.maxPrice !== undefined) && { label: `$${filters.minPrice ?? PRICE_MIN} - $${filters.maxPrice ?? PRICE_MAX}`, clear: { minPrice: undefined, maxPrice: undefined } },
+    (filters.minPrice !== undefined || filters.maxPrice !== undefined) && { label: `${currencySymbol}${filters.minPrice ?? PRICE_MIN} - ${currencySymbol}${filters.maxPrice ?? PRICE_MAX}`, clear: { minPrice: undefined, maxPrice: undefined } },
     filters.collection && { label: COLLECTION_TITLES[filters.collection], clear: { collection: undefined } },
   ].filter(Boolean) as { label: string; clear: Partial<ProductFilters> }[];
 

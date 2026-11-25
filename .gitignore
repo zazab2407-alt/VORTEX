@@ -12,6 +12,7 @@ server/uploads/*
 
 # Handoff archives
 handoff/*.zip
+handoff/test-logs/
 
 # TypeScript build cache
 *.tsbuildinfo

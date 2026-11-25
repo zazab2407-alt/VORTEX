@@ -1,6 +1,16 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { testUri } from './helpers.mjs';
+import { LOCAL_IMAGE, PLACEHOLDER_IMAGE } from '../src/seed/imagePaths.js';
+import demoImages from '../src/seed/demoImages.json' with { type: 'json' };
+
+// Licences accepted for demo photos (all permit commercial use). Share-alike and non-commercial licences are excluded.
+const ALLOWED_LICENCES = new Set(['CC0', 'CC BY 2.0', 'CC BY 4.0', 'Public domain']);
+const publicPath = (p) => path.join(fileURLToPath(new URL('../../client/public', import.meta.url)), p);
+
 
 const uri = testUri('seed');
 const skip = !uri && 'set MONGO_TEST_URI to run database tests';
@@ -36,8 +46,64 @@ describe('Seed script', { skip }, () => {
     assert.equal(all.filter((p) => p.isFeatured).length, 7); assert.equal(all.filter((p) => p.salePrice != null).length, 8); assert.equal(all.filter((p) => p.isNewArrival).length, 9);
     assert.deepEqual([...new Set(all.map((p) => p.gender))].sort(), ['men', 'unisex', 'women']);
     assert.ok(all.every((p) => p.effectivePrice === (p.salePrice ?? p.price)));
-    assert.ok(all.every((p) => p.images.length === 3 && p.images.every((u) => u.startsWith('https://images.unsplash.com/photo-'))));
   });
+  test('every product has exactly one local demo photo that is a valid path and exists on disk', async () => {
+    const all = await Product.find();
+    assert.equal(all.length, 40);
+    for (const p of all) {
+      assert.equal(p.images.length, 1, `${p.name} should have one demo photo`);
+      const [img] = p.images;
+      assert.match(img, LOCAL_IMAGE, `${p.name}: ${img} is not a local demo image path`);
+      assert.ok(!/^https?:/i.test(img) && !img.includes('unsplash'), `${p.name} must not hotlink external photos`);
+      assert.ok(fs.existsSync(publicPath(img)), `${p.name}: file missing: ${img}`);
+    }
+  });
+  test('demo photos are assigned without unintended duplicates across all 40 products', async () => {
+    const all = await Product.find();
+    const assigned = all.map((p) => p.images[0]);
+    assert.equal(new Set(assigned).size, assigned.length, 'two products share one photo');
+  });
+  test('every product photo has a complete licence record (source, photographer, licence, licence URL)', async () => {
+    const records = new Map(demoImages.records.map((r) => [r.file, r]));
+    const all = await Product.find();
+    for (const p of all) {
+      const r = records.get(p.images[0]);
+      assert.ok(r, `${p.name}: ${p.images[0]} has no licence record in demoImages.json`);
+      assert.ok(ALLOWED_LICENCES.has(r.licence), `${p.name}: licence "${r.licence}" is not permitted`);
+      assert.ok(r.artist && r.sourcePage && r.licenceUrl, `${p.name}: incomplete licence record`);
+    }
+  });
+  test('storefront and category images are local, exist, and are licensed or generated placeholders', async () => {
+    const categories = await Category.find();
+    assert.equal(categories.length, 8);
+    for (const c of categories) {
+      assert.match(c.image, LOCAL_IMAGE, `${c.name}: ${c.image} is not local`);
+      assert.ok(fs.existsSync(publicPath(c.image)), `${c.name}: missing ${c.image}`);
+    }
+    assert.ok(fs.existsSync(publicPath(PLACEHOLDER_IMAGE)), 'the generated placeholder must exist');
+    for (const f of ['/images/site/hero.webp', '/images/site/men-banner.webp', '/images/site/women-banner.webp', '/images/site/promo.webp', ...[1, 2, 3, 4, 5, 6].map((n) => `/images/site/gallery-${n}.webp`)]) {
+      assert.ok(fs.existsSync(publicPath(f)), `missing storefront image ${f}`);
+      assert.ok(demoImages.records.some((r) => r.file === f), `${f} has no licence record`);
+    }
+  });
+  test('the old Unsplash images are gone from the active catalogue data', async () => {
+    const all = await Product.find();
+    assert.ok(all.every((p) => p.images.every((u) => !u.includes('unsplash'))), 'an active product still uses an old Unsplash image');
+    const cats = await Category.find();
+    assert.ok(cats.every((c) => !String(c.image).includes('unsplash')), 'a category still uses an old Unsplash image');
+    assert.ok(!demoImages.records.some((r) => /unsplash/i.test(r.file)), 'a storefront image is an Unsplash URL');
+  });
+  test('the demo image catalogue is complete and sourced', async () => {
+    const { PHOTO_BY_SLUG } = await import('../src/seed/demoPhotos.js');
+    const { PRODUCTS, slugOf } = await import('../src/seed/catalog.js');
+    assert.equal(PRODUCTS.every((d) => PHOTO_BY_SLUG[slugOf(d.name)]), true, 'every product has a photo assignment');
+    const photoFiles = demoImages.records.filter((r) => r.kind === 'product-photo');
+    assert.equal(photoFiles.length, 46, 'photo-01..46 are all recorded');
+    for (const photo of new Set(Object.values(PHOTO_BY_SLUG))) assert.ok(photoFiles.some((r) => r.photo === photo), `${photo} has no licence record`);
+    assert.equal(demoImages.records.filter((r) => r.kind === 'site').length, 10);
+    for (const r of demoImages.records) assert.ok(ALLOWED_LICENCES.has(r.licence) && r.sourcePage.startsWith('https://commons.wikimedia.org/'), `${r.file} source/licence`);
+  });
+
   test('seeded products have no rating and no review count', async () => {
     for (const p of await Product.find()) { assert.equal(p.reviewCount, 0, p.name); assert.equal(p.rating, 0, p.name); }
   });

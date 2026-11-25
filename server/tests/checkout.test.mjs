@@ -129,7 +129,7 @@ describe('Cart quote, checkout and stock', { skip }, () => {
       assert.match(o.orderNumber, /^VTX-\d{6}-[A-Z2-9]{8}$/); assert.deepEqual([o.status, o.paymentMethod, o.paymentStatus], ['pending', 'cod', 'pending']);
       assert.deepEqual([o.subtotal, o.discount, o.shippingCost, o.total], [136, 0, 0, 136]);
       assert.deepEqual(o.items[0], { productId: o.items[0].productId, name: 'Flux High-Waist Leggings', slug: FLUX[0], image: o.items[0].image, size: 'M', color: 'Black', unitPrice: 68, quantity: 2, lineTotal: 136 });
-      assert.match(o.items[0].image, /^https:\/\/images\.unsplash\.com\//);
+      assert.equal(o.items[0].image, (await import('../src/seed/demoPhotos.js')).demoPhotoPath((await import('../src/seed/demoPhotos.js')).PHOTO_BY_SLUG['flux-high-waist-leggings']), 'the order snapshot carries the local demo photo');
       assert.equal(o.customer.email, 'guest@example.com', 'email stored lower-case'); assert.equal(o.shippingAddress.notes, 'Call before arriving');
       assert.equal(o.statusHistory.length, 1); assert.equal(o.statusHistory[0].status, 'pending');
       assert.equal(await t.stockOf(...FLUX), before - 2, 'stock deducted'); assert.equal((await t.product(FLUX[0])).sold, soldBefore + 2);

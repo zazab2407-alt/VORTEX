@@ -7,6 +7,7 @@ import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { useToast } from '../../context/ToastContext';
 import { ApiClientError } from '../../services/http';
 import { ALL_SIZES, FILTER_COLORS } from '../../data/catalog';
+import { useShopConfig } from '../../hooks/useShopConfig';
 import { variantKey } from '../../utils/format';
 import type { ColorOption, Gender } from '../../types';
 import Field from '../../components/Field';
@@ -35,6 +36,7 @@ export default function ProductForm() {
   useDocumentTitle(isNew ? 'Admin: new product' : 'Admin: edit product');
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { currencySymbol } = useShopConfig();
 
   const cats = useAsync((s) => adminService.categories(s), []);
   const product = useAsync(async (s) => (id ? adminService.product(id, s) : null), [id]);
@@ -153,8 +155,8 @@ export default function ProductForm() {
           <Field label="Name" value={form.name} onChange={(e) => set('name', e.target.value)} error={errors.name} maxLength={120} />
           <Field multiline label="Description" value={form.description} onChange={(e) => set('description', e.target.value)} error={errors.description} rows={4} maxLength={2000} />
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Price ($)" type="number" min="0" step="0.01" inputMode="decimal" value={form.price} onChange={(e) => set('price', e.target.value)} error={errors.price} />
-            <Field label="Sale price ($, optional)" type="number" min="0" step="0.01" inputMode="decimal" value={form.salePrice} onChange={(e) => set('salePrice', e.target.value)} error={errors.salePrice} hint="Leave empty for no sale." />
+            <Field label={`Price (${currencySymbol})`} type="number" min="0" step="0.01" inputMode="decimal" value={form.price} onChange={(e) => set('price', e.target.value)} error={errors.price} />
+            <Field label={`Sale price (${currencySymbol}, optional)`} type="number" min="0" step="0.01" inputMode="decimal" value={form.salePrice} onChange={(e) => set('salePrice', e.target.value)} error={errors.salePrice} hint="Leave empty for no sale." />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>

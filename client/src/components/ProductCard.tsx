@@ -15,7 +15,7 @@ export default function ProductCard({ product: p }: { product: Product }) {
       <Link to={`/product/${p.slug}`} className="block">
         <div className="relative aspect-[4/5] overflow-hidden bg-neutral-100">
           <Img src={p.images[0]} alt={p.name} className="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:opacity-0" />
-          <Img src={p.images[1]} alt="" className="absolute inset-0 h-full w-full scale-105 object-cover opacity-0 transition-all duration-700 group-hover:scale-100 group-hover:opacity-100" />
+          {p.images[1] && <Img src={p.images[1]} alt="" className="absolute inset-0 h-full w-full scale-105 object-cover opacity-0 transition-all duration-700 group-hover:scale-100 group-hover:opacity-100" />}
           <div className="absolute left-3 top-3 flex flex-col gap-1.5">
             {p.isNew && <span className="bg-neutral-950 px-2.5 py-1 font-display text-sm font-bold uppercase tracking-wider text-white">New</span>}
             {off > 0 && <span className="bg-brand px-2.5 py-1 font-display text-sm font-bold uppercase tracking-wider text-white">-{off}%</span>}

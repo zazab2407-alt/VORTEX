@@ -47,21 +47,21 @@ describe('Products & categories API', { skip }, () => {
       assert.equal(Object.keys(p.stock).length, p.sizes.length * p.colors.length, 'every size/colour has a stock row');
       assert.ok(!('_id' in p) && !('__v' in p) && !('variants' in p));
     });
-    test('page 1 has 12 of 16, page 2 has the other 4 with no overlap', async () => {
+    test('page 1 has 12 of 40, page 2 has the next 12 with no overlap', async () => {
       const a = await get('/products'); const b = await get('/products?page=2');
-      assert.equal(a.body.data.length, 12); assert.deepEqual(a.body.meta, { page: 1, limit: 12, total: 16, totalPages: 2, hasNext: true, hasPrev: false });
-      assert.equal(b.body.data.length, 4); assert.equal(b.body.meta.hasNext, false); assert.equal(b.body.meta.hasPrev, true);
-      assert.equal(new Set([...a.body.data, ...b.body.data].map((p) => p.id)).size, 16);
+      assert.equal(a.body.data.length, 12); assert.deepEqual(a.body.meta, { page: 1, limit: 12, total: 40, totalPages: 4, hasNext: true, hasPrev: false });
+      assert.equal(b.body.data.length, 12); assert.equal(b.body.meta.hasNext, true); assert.equal(b.body.meta.hasPrev, true);
+      assert.equal(new Set([...a.body.data, ...b.body.data].map((p) => p.id)).size, 24);
     });
     test('page beyond the end is an empty list, not an error; limit up to 50 works', async () => {
       const r = await get('/products?page=9'); assert.equal(r.status, 200); assert.deepEqual(r.body.data, []);
-      assert.equal((await get('/products?limit=50')).body.data.length, 16);
+      assert.equal((await get('/products?limit=50')).body.data.length, 40);
     });
     test('price sorts use the sale price when there is one', async () => {
       const asc = (await get('/products?limit=50&sort=price-asc')).body.data.map(eff);
       const desc = (await get('/products?limit=50&sort=price-desc')).body.data.map(eff);
       assert.deepEqual(asc, [...asc].sort((a, b) => a - b)); assert.deepEqual(desc, [...desc].sort((a, b) => b - a));
-      assert.equal(asc[0], 18); assert.equal(desc[0], 119);
+      assert.equal(asc[0], 14); assert.equal(desc[0], 119);
     });
     test('best-selling and newest sorts', async () => {
       const best = (await get('/products?limit=50&sort=best')).body.data.map((p) => p.sold);
@@ -71,17 +71,17 @@ describe('Products & categories API', { skip }, () => {
     });
     test('paging a sorted list never repeats or skips a product (stable ordering)', async () => {
       const seen = [];
-      for (let page = 1; page <= 4; page++) seen.push(...(await get(`/products?sort=price-asc&limit=5&page=${page}`)).body.data.map((p) => p.id));
-      assert.equal(seen.length, 16); assert.equal(new Set(seen).size, 16);
+      for (let page = 1; page <= 8; page++) seen.push(...(await get(`/products?sort=price-asc&limit=5&page=${page}`)).body.data.map((p) => p.id));
+      assert.equal(seen.length, 40); assert.equal(new Set(seen).size, 40);
     });
   });
 
   describe('GET /products: filters and search', () => {
     test('gender: men includes unisex; exactGender does not; unisex alone', async () => {
-      assert.equal((await get('/products?gender=men&limit=50')).body.meta.total, 10);
-      assert.equal((await get('/products?gender=men&exactGender=true')).body.meta.total, 6);
-      assert.equal((await get('/products?gender=women&limit=50')).body.meta.total, 10);
-      assert.equal((await get('/products?gender=unisex')).body.meta.total, 4);
+      assert.equal((await get('/products?gender=men&limit=50')).body.meta.total, 25);
+      assert.equal((await get('/products?gender=men&exactGender=true')).body.meta.total, 13);
+      assert.equal((await get('/products?gender=women&limit=50')).body.meta.total, 27);
+      assert.equal((await get('/products?gender=unisex')).body.meta.total, 12);
     });
     test('category by slug, by name (any case), unknown -> empty', async () => {
       assert.equal((await get('/products?category=hoodies-and-jackets')).body.meta.total, 3);
@@ -89,7 +89,7 @@ describe('Products & categories API', { skip }, () => {
       assert.equal((await get('/products?category=nope')).body.meta.total, 0);
     });
     test('size and colour', async () => {
-      const xs = await get('/products?size=XS&limit=50'); assert.equal(xs.body.meta.total, 6); assert.ok(xs.body.data.every((p) => p.gender === 'women'));
+      const xs = await get('/products?size=XS&limit=50'); assert.equal(xs.body.meta.total, 15); assert.ok(xs.body.data.every((p) => p.gender === 'women'));
       const olive = await get('/products?color=Olive&limit=50'); assert.ok(olive.body.meta.total > 0 && olive.body.data.every((p) => p.colors.some((c) => c.name === 'Olive')));
     });
     test('price range applies to the effective (sale) price', async () => {
@@ -99,13 +99,13 @@ describe('Products & categories API', { skip }, () => {
       assert.ok(!names(r).includes('Momentum Tech Hoodie'));
     });
     test('collections: new, best, sale', async () => {
-      const n = await get('/products?collection=new&limit=50'); assert.equal(n.body.meta.total, 5); assert.ok(n.body.data.every((p) => p.isNew));
-      const b = await get('/products?collection=best'); assert.deepEqual(names(b).sort(), ['Apex Performance Tee', 'Aura Seamless Sports Bra', 'Flux High-Waist Leggings', 'Momentum Tech Hoodie']); assert.ok(b.body.data.every((p) => p.isBestSeller));
-      const s = await get('/products?collection=sale'); assert.equal(s.body.meta.total, 4); assert.ok(s.body.data.every((p) => p.salePrice < p.price));
+      const n = await get('/products?collection=new&limit=50'); assert.equal(n.body.meta.total, 9); assert.ok(n.body.data.every((p) => p.isNew));
+      const b = await get('/products?collection=best'); assert.deepEqual(names(b).sort(), ['Apex Performance Tee', 'Aura Seamless Sports Bra', 'Flux High-Waist Leggings', 'Lotus Wide-Leg Pants', 'Momentum Tech Hoodie', 'Stride Singlet', 'Tide Racerback Swimsuit']); assert.ok(b.body.data.every((p) => p.isBestSeller));
+      const s = await get('/products?collection=sale'); assert.equal(s.body.meta.total, 8); assert.ok(s.body.data.every((p) => p.salePrice < p.price));
     });
     test('search: partial words, description text, and category names', async () => {
       assert.deepEqual(names(await get('/products?q=legging')), ['Flux High-Waist Leggings']);
-      assert.deepEqual(names(await get('/products?q=hood')).sort(), ['Momentum Tech Hoodie', 'Pulse Cropped Hoodie', 'Stealth Windrunner Jacket'], 'also the whole "Hoodies & Jackets" category');
+      assert.deepEqual(names(await get('/products?q=hood')).sort(), ['Momentum Tech Hoodie', 'Pulse Cropped Hoodie', 'Stealth Windrunner Jacket', 'Zephyr Running Jacket'], 'also the whole "Hoodies & Jackets" category, and Zephyr whose description mentions a hood');
       assert.ok(!names(await get('/products?q=tee')).includes('Hydra Shaker Bottle'), '"tee" must not match "steel"');
       assert.ok(names(await get('/products?q=tee')).includes('Apex Performance Tee'));
       assert.ok(names(await get('/products?q=zip')).includes('Surge Training Shorts'), 'matches description');
@@ -113,7 +113,7 @@ describe('Products & categories API', { skip }, () => {
       assert.equal((await get('/products?q=zzzzzz')).body.meta.total, 0);
     });
     test('search text and filters combine', async () => {
-      const r = await get('/products?q=tee&gender=women'); assert.deepEqual(names(r), ['Drift Oversized Tee']);
+      const r = await get('/products?q=tee&gender=women'); assert.deepEqual(names(r).sort(), ['Cadence Crop Tee', 'Drift Oversized Tee']);
     });
     test('regex characters in search are treated as plain text', async () => {
       for (const q of ['.*', '(', '[a-', '\\', '%2e*+?']) assert.equal((await get('/products?q=' + encodeURIComponent(q))).status, 200);
@@ -159,9 +159,9 @@ describe('Products & categories API', { skip }, () => {
   });
 
   describe('GET /categories', () => {
-    test('lists the 5 categories with live product counts', async () => {
+    test('lists the 8 categories with live product counts', async () => {
       const r = await get('/categories');
-      assert.equal(r.body.data.length, 5); assert.equal(r.body.data.reduce((s, c) => s + c.productCount, 0), 16);
+      assert.equal(r.body.data.length, 8); assert.equal(r.body.data.reduce((s, c) => s + c.productCount, 0), 40);
       assert.deepEqual(r.body.data.map((c) => c.name), [...r.body.data.map((c) => c.name)].sort());
       assert.equal(r.body.data.find((c) => c.slug === 'hoodies-and-jackets').productCount, 3);
     });
@@ -272,7 +272,7 @@ describe('Products & categories API', { skip }, () => {
     });
     test('inactive products disappear from the shop but can be reactivated', async () => {
       await api('PATCH', '/products/' + created.id, { isActive: false });
-      assert.equal((await get('/products/' + created.slug)).status, 404); assert.equal((await get('/products?q=singlet')).body.meta.total, 0);
+      assert.equal((await get('/products/' + created.slug)).status, 404); assert.equal((await get('/products?q=test%20runner%20singlet')).body.meta.total, 0);
       await api('PATCH', '/products/' + created.id, { isActive: true });
       assert.equal((await get('/products/' + created.slug)).status, 200);
     });

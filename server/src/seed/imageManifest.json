@@ -1,0 +1,7 @@
+{
+  "_about": "RETIRED. The earlier Unsplash-based manifest was removed because its photos are not allowed for reuse. Demo photography is now recorded in server/src/seed/demoImages.json and handoff/IMAGE_LICENSES.md. server/scripts/fetch-images.mjs is no longer used for the catalogue.",
+  "license": "See server/src/seed/demoImages.json.",
+  "products": {},
+  "categories": {},
+  "site": {}
+}

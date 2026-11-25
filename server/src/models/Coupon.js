@@ -14,6 +14,8 @@ const couponSchema = new mongoose.Schema(
     expiresAt: { type: Date },
     usageLimit: { type: Number, min: 1 },
     usedCount: { type: Number, default: 0, min: 0 },
+    /** Set (never cleared) by the first redemption. A coupon that has ever been redeemed keeps its code, even after its uses are returned. */
+    everRedeemed: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
@@ -40,12 +42,17 @@ couponSchema.methods.discountFor = function discountFor(subtotal) {
   return round2(Math.min(raw, subtotal));
 };
 
-/** Atomically uses one redemption. Returns null if the coupon is inactive or its limit was just reached by someone else. */
+/**
+ * Atomically uses one redemption. Returns null if the coupon is inactive, its limit was just reached, or (when `code` is
+ * given) the coupon has been renamed since the code was quoted. Binding to `code` closes the race where checkout reads a
+ * coupon under its old code, the code is then changed, and the stale quote would otherwise still redeem the renamed coupon.
+ */
 couponSchema.statics.redeem = function redeem(id, options = {}) {
+  const { code, ...rest } = options;
   return this.findOneAndUpdate(
-    { _id: id, isActive: true, $or: [{ usageLimit: null }, { $expr: { $lt: ['$usedCount', '$usageLimit'] } }] },
-    { $inc: { usedCount: 1 } },
-    { new: true, ...options }
+    { _id: id, ...(code !== undefined && { code }), isActive: true, $or: [{ usageLimit: null }, { $expr: { $lt: ['$usedCount', '$usageLimit'] } }] },
+    { $inc: { usedCount: 1 }, $set: { everRedeemed: true } },
+    { new: true, ...rest }
   );
 };
 

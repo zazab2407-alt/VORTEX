@@ -1,0 +1,915 @@
+{
+  "_about": "Source, photographer and licence for every locally hosted demo photo. Generated from Wikimedia Commons metadata. Demo content only: replace before real sales.",
+  "records": [
+    {
+      "kind": "product-photo",
+      "photo": "photo-01",
+      "file": "/images/products/demo/photo-01.webp",
+      "sourceTitle": "Woman doing squat workout in gym with barbell, back view.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Woman_doing_squat_workout_in_gym_with_barbell,_back_view.jpg",
+      "artist": "Nenad Stojkovic",
+      "artistFromMetadata": "Nenad Stojkovic",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "flux-high-waist-leggings"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-02",
+      "file": "/images/products/demo/photo-02.webp",
+      "sourceTitle": "Woman doing squat workout in gym with barbell.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Woman_doing_squat_workout_in_gym_with_barbell.jpg",
+      "artist": "Nenad Stojkovic",
+      "artistFromMetadata": "Nenad Stojkovic",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "nova-training-shorts"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-03",
+      "file": "/images/products/demo/photo-03.webp",
+      "sourceTitle": "Gym workout machine.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Gym_workout_machine.jpg",
+      "artist": "Samson Ssemakadde",
+      "artistFromMetadata": "Samson Ssemakadde",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "grounding-yoga-mat"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-04",
+      "file": "/images/products/demo/photo-04.webp",
+      "sourceTitle": "Gym workout machines.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Gym_workout_machines.jpg",
+      "artist": "Samson Ssemakadde",
+      "artistFromMetadata": "Samson Ssemakadde",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "trail-runner-belt"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-05",
+      "file": "/images/products/demo/photo-05.webp",
+      "sourceTitle": "Fitness enthusiast prepares for strength training workout in modern gym environment closeup.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Fitness_enthusiast_prepares_for_strength_training_workout_in_modern_gym_environment_closeup.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "grip-training-gloves"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-06",
+      "file": "/images/products/demo/photo-06.webp",
+      "sourceTitle": "Individual preparing for a workout in a modern gym environment.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Individual_preparing_for_a_workout_in_a_modern_gym_environment.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": []
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-07",
+      "file": "/images/products/demo/photo-07.webp",
+      "sourceTitle": "Gym workout session focusing on strength training with a female athlete using gym equipment in a fitness studio.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Gym_workout_session_focusing_on_strength_training_with_a_female_athlete_using_gym_equipment_in_a_fitness_studio.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "aura-seamless-sports-bra"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-08",
+      "file": "/images/products/demo/photo-08.webp",
+      "sourceTitle": "Close up of hands of a fit woman in the gym, exercising legs doing cardio workout.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Close_up_of_hands_of_a_fit_woman_in_the_gym,_exercising_legs_doing_cardio_workout.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "stretch-band-set"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-09",
+      "file": "/images/products/demo/photo-09.webp",
+      "sourceTitle": "Innovative fitness tool used for strength training in a gym environment during a workout session.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Innovative_fitness_tool_used_for_strength_training_in_a_gym_environment_during_a_workout_session.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "surge-training-shorts"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-10",
+      "file": "/images/products/demo/photo-10.webp",
+      "sourceTitle": "Fitness enthusiast uses unique water jug for exercise in modern gym during evening workout session.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Fitness_enthusiast_uses_unique_water_jug_for_exercise_in_modern_gym_during_evening_workout_session.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "hydra-shaker-bottle"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-11",
+      "file": "/images/products/demo/photo-11.webp",
+      "sourceTitle": "Fitness equipment in a modern gym with various machines and workout space during the morning hours.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Fitness_equipment_in_a_modern_gym_with_various_machines_and_workout_space_during_the_morning_hours.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "pacific-swim-cap"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-12",
+      "file": "/images/products/demo/photo-12.webp",
+      "sourceTitle": "This gym room showcases various workout machines.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:This_gym_room_showcases_various_workout_machines.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "dryline-swim-towel"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-13",
+      "file": "/images/products/demo/photo-13.webp",
+      "sourceTitle": "Person preparing to lift a barbell at a gym with water bottle nearby during a workout session.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Person_preparing_to_lift_a_barbell_at_a_gym_with_water_bottle_nearby_during_a_workout_session.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "ease-mobility-shorts"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-14",
+      "file": "/images/products/demo/photo-14.webp",
+      "sourceTitle": "Woman exercises at a gym using a weight machine while wearing workout clothes.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Woman_exercises_at_a_gym_using_a_weight_machine_while_wearing_workout_clothes.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "pulse-cropped-hoodie"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-15",
+      "file": "/images/products/demo/photo-15.webp",
+      "sourceTitle": "Fitness model shoulder exercise weight training (32004749753).jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Fitness_model_shoulder_exercise_weight_training_(32004749753).jpg",
+      "artist": "ThoroughlyReviewed",
+      "artistFromMetadata": "ThoroughlyReviewed",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "drift-oversized-tee"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-16",
+      "file": "/images/products/demo/photo-16.webp",
+      "sourceTitle": "Attractive man lifting dumbbell weight for exercise in fitness gym.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Attractive_man_lifting_dumbbell_weight_for_exercise_in_fitness_gym.jpg",
+      "artist": "Nenad Stojkovic",
+      "artistFromMetadata": "Nenad Stojkovic",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "stride-singlet"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-17",
+      "file": "/images/products/demo/photo-17.webp",
+      "sourceTitle": "Close-up Hand holding dumbbell in gym.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Close-up_Hand_holding_dumbbell_in_gym.jpg",
+      "artist": "Nenad Stojkovic",
+      "artistFromMetadata": "Nenad Stojkovic",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "momentum-tech-hoodie"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-18",
+      "file": "/images/products/demo/photo-18.webp",
+      "sourceTitle": "Kurzhanteln 2 x 15 kg 2v2.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Kurzhanteln_2_x_15_kg_2v2.jpg",
+      "artist": "Singlespeedfahrer",
+      "artistFromMetadata": "Singlespeedfahrer",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "pose-lightweight-joggers"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-19",
+      "file": "/images/products/demo/photo-19.webp",
+      "sourceTitle": "Fit young man caucasian running on machine treadmill workout in gym.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Fit_young_man_caucasian_running_on_machine_treadmill_workout_in_gym.jpg",
+      "artist": "Nenad Stojkovic",
+      "artistFromMetadata": "Nenad Stojkovic",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "current-swim-shorts"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-20",
+      "file": "/images/products/demo/photo-20.webp",
+      "sourceTitle": "Young man running on treadmill during sports training in a gym.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Young_man_running_on_treadmill_during_sports_training_in_a_gym.jpg",
+      "artist": "Nenad Stojkovic",
+      "artistFromMetadata": "Nenad Stojkovic",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "riptide-training-swim-trunks"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-21",
+      "file": "/images/products/demo/photo-21.webp",
+      "sourceTitle": "Exercise Treadmill Convey Motion.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Exercise_Treadmill_Convey_Motion.jpg",
+      "artist": "Larry D. Moore",
+      "artistFromMetadata": "Larry D. Moore",
+      "licence": "CC BY 4.0",
+      "licenceText": "CC BY 4.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "aero-half-zip-pullover"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-22",
+      "file": "/images/products/demo/photo-22.webp",
+      "sourceTitle": "Treadmill from Viking Sport, front.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Treadmill_from_Viking_Sport,_front.jpg",
+      "artist": "W.carter",
+      "artistFromMetadata": "W.carter",
+      "licence": "CC BY 4.0",
+      "licenceText": "CC BY 4.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": []
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-23",
+      "file": "/images/products/demo/photo-23.webp",
+      "sourceTitle": "Jump rope - cross over - 1.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Jump_rope_-_cross_over_-_1.jpg",
+      "artist": "Wonderlane",
+      "artistFromMetadata": "Wonderlane",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "zephyr-running-jacket"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-24",
+      "file": "/images/products/demo/photo-24.webp",
+      "sourceTitle": "Kettlebell 130418-A-EN604-688.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Kettlebell_130418-A-EN604-688.jpg",
+      "artist": "Staff Sgt. Andrew Porch",
+      "artistFromMetadata": "Staff Sgt. Andrew Porch",
+      "licence": "Public domain",
+      "licenceText": "Public domain (no attribution required).",
+      "licenceUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "sprint-split-shorts"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-25",
+      "file": "/images/products/demo/photo-25.webp",
+      "sourceTitle": "Fitness bar with resistance tube.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Fitness_bar_with_resistance_tube.jpg",
+      "artist": "Corn cheese",
+      "artistFromMetadata": "Corn cheese",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "lumen-reflective-vest"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-26",
+      "file": "/images/products/demo/photo-26.webp",
+      "sourceTitle": "Woman on a yoga mat next to a window doing lower back exercises - 50401795697.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Woman_on_a_yoga_mat_next_to_a_window_doing_lower_back_exercises_-_50401795697.jpg",
+      "artist": "Nenad Stojkovic",
+      "artistFromMetadata": "Nenad Stojkovic",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": []
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-27",
+      "file": "/images/products/demo/photo-27.webp",
+      "sourceTitle": "Closeup of the woman on a yoga mat stretching her hips. (50398220748).jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Closeup_of_the_woman_on_a_yoga_mat_stretching_her_hips._(50398220748).jpg",
+      "artist": "Nenad Stojkovic",
+      "artistFromMetadata": "Nenad Stojkovic",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": []
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-28",
+      "file": "/images/products/demo/photo-28.webp",
+      "sourceTitle": "Top view of a woman lying on the yoga mat.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Top_view_of_a_woman_lying_on_the_yoga_mat.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "tide-racerback-swimsuit"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-29",
+      "file": "/images/products/demo/photo-29.webp",
+      "sourceTitle": "A woman prepares for her yoga routine.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:A_woman_prepares_for_her_yoga_routine.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "pace-running-tights"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-30",
+      "file": "/images/products/demo/photo-30.webp",
+      "sourceTitle": "Yoga mat and water bottle in a living room.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Yoga_mat_and_water_bottle_in_a_living_room.jpg",
+      "artist": "Femivaco",
+      "artistFromMetadata": "Femivaco",
+      "licence": "CC BY 4.0",
+      "licenceText": "CC BY 4.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "calm-oversized-crewneck"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-31",
+      "file": "/images/products/demo/photo-31.webp",
+      "sourceTitle": "A woman standing on a yoga mat in front of a chair.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:A_woman_standing_on_a_yoga_mat_in_front_of_a_chair.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "lotus-wide-leg-pants"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-32",
+      "file": "/images/products/demo/photo-32.webp",
+      "sourceTitle": "Hoka Running Shoe.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Hoka_Running_Shoe.jpg",
+      "artist": "Mimimccraney",
+      "artistFromMetadata": "Mimimccraney",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "insight-running-socks-3-pack"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-33",
+      "file": "/images/products/demo/photo-33.webp",
+      "sourceTitle": "Pink Running Shoes (8086978002).jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Pink_Running_Shoes_(8086978002).jpg",
+      "artist": "RichardBH from Hamilton, Canada",
+      "artistFromMetadata": "RichardBH from Hamilton, Canada",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "vortex-pro-cap"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-34",
+      "file": "/images/products/demo/photo-34.webp",
+      "sourceTitle": "Running shoes display 2.JPG",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Running_shoes_display_2.JPG",
+      "artist": "MarkBuckawicki",
+      "artistFromMetadata": "MarkBuckawicki",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "core-duffel-bag"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-35",
+      "file": "/images/products/demo/photo-35.webp",
+      "sourceTitle": "Women in Sport Bra and Leggings 1, by Andrea Piacquadio.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Women_in_Sport_Bra_and_Leggings_1,_by_Andrea_Piacquadio.jpg",
+      "artist": "Andrea Piacquadio",
+      "artistFromMetadata": "Andrea Piacquadio",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "flow-studio-jumpsuit"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-36",
+      "file": "/images/products/demo/photo-36.webp",
+      "sourceTitle": "Young Woman in Red Sport Bra by Andrea Piacquadio - 1.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Young_Woman_in_Red_Sport_Bra_by_Andrea_Piacquadio_-_1.jpg",
+      "artist": "Andrea Piacquadio",
+      "artistFromMetadata": "Andrea Piacquadio",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "lagoon-two-piece-set"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-37",
+      "file": "/images/products/demo/photo-37.webp",
+      "sourceTitle": "Women in Sport Bra and Leggings 5, by Andrea Piacquadio.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Women_in_Sport_Bra_and_Leggings_5,_by_Andrea_Piacquadio.jpg",
+      "artist": "Andrea Piacquadio",
+      "artistFromMetadata": "Andrea Piacquadio",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "cadence-crop-tee"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-38",
+      "file": "/images/products/demo/photo-38.webp",
+      "sourceTitle": "Colorful sports bras in Walmart.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Colorful_sports_bras_in_Walmart.jpg",
+      "artist": "Rusty Clark - On the Air M-F 8am-noon from merritt usland FL",
+      "artistFromMetadata": "Rusty Clark - On the Air M-F 8am-noon from merritt usland FLA",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": []
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-39",
+      "file": "/images/products/demo/photo-39.webp",
+      "sourceTitle": "US Army physical training (PT) formation on Fort Lewis, Washington.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:US_Army_physical_training_(PT)_formation_on_Fort_Lewis,_Washington.jpg",
+      "artist": "Challahbai15",
+      "artistFromMetadata": "Challahbai15",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "velocity-joggers"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-40",
+      "file": "/images/products/demo/photo-40.webp",
+      "sourceTitle": "Sailors perform physical fitness training. (8408580084).jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Sailors_perform_physical_fitness_training._(8408580084).jpg",
+      "artist": "Official U.S. Navy Page from United States of America",
+      "artistFromMetadata": "Official U.S. Navy Page from United States of America",
+      "licence": "Public domain",
+      "licenceText": "Public domain (no attribution required).",
+      "licenceUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": []
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-41",
+      "file": "/images/products/demo/photo-41.webp",
+      "sourceTitle": "Man performs push-ups in a gym during a fitness session in the early evening, demonstrating strength and determination",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Man_performs_push-ups_in_a_gym_during_a_fitness_session_in_the_early_evening,_demonstrating_strength_and_determination.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "stealth-windrunner-jacket"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-42",
+      "file": "/images/products/demo/photo-42.webp",
+      "sourceTitle": "Man resting after the workout in the gym",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Man_resting_after_the_workout_in_the_gym.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "apex-performance-tee"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-43",
+      "file": "/images/products/demo/photo-43.webp",
+      "sourceTitle": "Fit young man doing deadlift exercise in gym",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Fit_young_man_doing_deadlift_exercise_in_gym.jpg",
+      "artist": "Nenad Stojkovic",
+      "artistFromMetadata": "Nenad Stojkovic",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "titan-compression-tank"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-44",
+      "file": "/images/products/demo/photo-44.webp",
+      "sourceTitle": "Attractive sporty woman doing overhead press in gym with barbell",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Attractive_sporty_woman_doing_overhead_press_in_gym_with_barbell.jpg",
+      "artist": "Nenad Stojkovic",
+      "artistFromMetadata": "Nenad Stojkovic",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "balance-pilates-bodysuit"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-45",
+      "file": "/images/products/demo/photo-45.webp",
+      "sourceTitle": "Woman performing strength training exercises in a fitness center",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Woman_performing_strength_training_exercises_in_a_fitness_center.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "elevate-longline-bra"
+      ]
+    },
+    {
+      "kind": "product-photo",
+      "photo": "photo-46",
+      "file": "/images/products/demo/photo-46.webp",
+      "sourceTitle": "Tired blonde woman in the gym. End of training",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Tired_blonde_woman_in_the_gym._End_of_training.jpg",
+      "artist": "Nenad Stojkovic",
+      "artistFromMetadata": "Nenad Stojkovic",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 4:5 and re-encoded as WebP (1000x1250).",
+      "usedBy": [
+        "serene-yoga-top"
+      ]
+    },
+    {
+      "kind": "site",
+      "key": "hero",
+      "file": "/images/site/hero.webp",
+      "sourceTitle": "Women in Sport Bra and Leggings by Andrea Piacquadio - 1.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Women_in_Sport_Bra_and_Leggings_by_Andrea_Piacquadio_-_1.jpg",
+      "artist": "Andrea Piacquadio",
+      "artistFromMetadata": "Andrea Piacquadio",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped and re-encoded as WebP."
+    },
+    {
+      "kind": "site",
+      "key": "men-banner",
+      "file": "/images/site/men-banner.webp",
+      "sourceTitle": "Fit young man doing deadlift exercise in gym",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Fit_young_man_doing_deadlift_exercise_in_gym.jpg",
+      "artist": "Nenad Stojkovic",
+      "artistFromMetadata": "Nenad Stojkovic",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped to 1200x900 and re-encoded as WebP."
+    },
+    {
+      "kind": "site",
+      "key": "women-banner",
+      "file": "/images/site/women-banner.webp",
+      "sourceTitle": "Women in Sport Bra and Leggings 2, by Andrea Piacquadio.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Women_in_Sport_Bra_and_Leggings_2,_by_Andrea_Piacquadio.jpg",
+      "artist": "Andrea Piacquadio",
+      "artistFromMetadata": "Andrea Piacquadio",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped and re-encoded as WebP."
+    },
+    {
+      "kind": "site",
+      "key": "promo",
+      "file": "/images/site/promo.webp",
+      "sourceTitle": "Woman with long curly hair sitting on yoga mat and working on a laptop.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Woman_with_long_curly_hair_sitting_on_yoga_mat_and_working_on_a_laptop.jpg",
+      "artist": "Shixart1985",
+      "artistFromMetadata": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceText": "CC BY 2.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped and re-encoded as WebP."
+    },
+    {
+      "kind": "site",
+      "key": "gallery-1",
+      "file": "/images/site/gallery-1.webp",
+      "sourceTitle": "Abstract Perspective of a Treadmill 1.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Abstract_Perspective_of_a_Treadmill_1.jpg",
+      "artist": "Larry D. Moore",
+      "artistFromMetadata": "Larry D. Moore",
+      "licence": "CC BY 4.0",
+      "licenceText": "CC BY 4.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped and re-encoded as WebP."
+    },
+    {
+      "kind": "site",
+      "key": "gallery-2",
+      "file": "/images/site/gallery-2.webp",
+      "sourceTitle": "Abstract Perspective of a Treadmill 2.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Abstract_Perspective_of_a_Treadmill_2.jpg",
+      "artist": "Larry D. Moore",
+      "artistFromMetadata": "Larry D. Moore",
+      "licence": "CC BY 4.0",
+      "licenceText": "CC BY 4.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped and re-encoded as WebP."
+    },
+    {
+      "kind": "site",
+      "key": "gallery-3",
+      "file": "/images/site/gallery-3.webp",
+      "sourceTitle": "Treadmill from Viking Sport, side.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Treadmill_from_Viking_Sport,_side.jpg",
+      "artist": "W.carter",
+      "artistFromMetadata": "W.carter",
+      "licence": "CC BY 4.0",
+      "licenceText": "CC BY 4.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped and re-encoded as WebP."
+    },
+    {
+      "kind": "site",
+      "key": "gallery-4",
+      "file": "/images/site/gallery-4.webp",
+      "sourceTitle": "Cream Colored Bra on Bed.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Cream_Colored_Bra_on_Bed.jpg",
+      "artist": "Flame, not lame",
+      "artistFromMetadata": "Flame, not lame",
+      "licence": "CC0",
+      "licenceText": "CC0 1.0 Universal (public domain dedication). No attribution required; credit given anyway.",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped and re-encoded as WebP."
+    },
+    {
+      "kind": "site",
+      "key": "gallery-5",
+      "file": "/images/site/gallery-5.webp",
+      "sourceTitle": "Morning Physical Training DVIDS100978.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Morning_Physical_Training_DVIDS100978.jpg",
+      "artist": "Spc. Eric Liesse",
+      "artistFromMetadata": "Spc. Eric Liesse",
+      "licence": "Public domain",
+      "licenceText": "Public domain (U.S. Government work or otherwise unrestricted). No attribution required.",
+      "licenceUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped and re-encoded as WebP."
+    },
+    {
+      "kind": "site",
+      "key": "gallery-6",
+      "file": "/images/site/gallery-6.webp",
+      "sourceTitle": "Treadmill from Viking Sport, folded.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Treadmill_from_Viking_Sport,_folded.jpg",
+      "artist": "W.carter",
+      "artistFromMetadata": "W.carter",
+      "licence": "CC BY 4.0",
+      "licenceText": "CC BY 4.0 (attribution required; commercial use permitted). Cropped and re-encoded.",
+      "licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "originalPixels": "undefinedxundefined",
+      "modified": "Cropped and re-encoded as WebP."
+    }
+  ]
+}

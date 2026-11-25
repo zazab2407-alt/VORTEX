@@ -1,24 +1,25 @@
+import slugify from 'slugify';
+import { categoryImagePath } from './imagePaths.js';
+import { PHOTO_BY_SLUG, demoPhotoPath } from './demoPhotos.js';
+
 /** Demo catalogue: 8 categories, 40 sportswear products, demo reviewers and coupons. */
-const img = (id, w = 900) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+/** Same text the database makes for a product / category slug; also the file name of its demo photo. */
+export const slugOf = (name) => slugify(name, { lower: true, strict: true });
 
-// Each ID verified live on unsplash.com (see client/src/data/images.ts for what every photo shows)
-const POOLS = {
-  men: ['photo-1517836357463-d25dfeac3438', 'photo-1599058917212-d750089bc07e', 'photo-1517838277536-f5f99be501cd', 'photo-1521804906057-1df8fdb718b7', 'photo-1788004001463-2576f91f511e', 'photo-1772450014551-3dae12d905ef'],
-  women: ['photo-1434682881908-b43d0467b798', 'photo-1541534741688-6078c6bfb5c5', 'photo-1591258370814-01609b341790', 'photo-1574680096145-d05b474e2155', 'photo-1722925541142-5db2668ca492', 'photo-1761839258420-5c3e2f2e2a74'],
-  gear: ['photo-1761946356399-8335dbdce394', 'photo-1758223520369-c6a215d6aedb', 'photo-1583454110551-21f2fa2afe61', 'photo-1782849206110-4a47f5acb1f0'],
-};
-const pick = (pool, start) => [0, 1, 2].map((o) => img(POOLS[pool][(start + o) % POOLS[pool].length]));
-
-export const CATEGORIES = [
-  { name: 'Tops', description: 'Performance tees, tanks and training tops.', image: img(POOLS.men[2], 800) },
-  { name: 'Bottoms', description: 'Shorts, joggers and leggings built to move.', image: img(POOLS.women[2], 800) },
-  { name: 'Hoodies & Jackets', description: 'Warm-ups, layers and weather protection.', image: img(POOLS.men[4], 800) },
-  { name: 'Sports Bras', description: 'Support for every level of impact.', image: img(POOLS.women[0], 800) },
-  { name: 'Accessories', description: 'Bags, bottles, caps and training gear.', image: img(POOLS.gear[0], 800) },
-  { name: 'Swimwear', description: 'Chlorine-resistant training swimwear and swim accessories.', image: img(POOLS.women[4], 800) },
-  { name: 'Running Essentials', description: 'Lightweight running tees, shorts and reflective gear.', image: img(POOLS.men[1], 800) },
-  { name: 'Yoga & Studio', description: 'Flexible studio wear for yoga, Pilates and mobility work.', image: img(POOLS.women[1], 800) },
+// Demo photography is hosted locally under client/public/images (see handoff/IMAGE_LICENSES.md for every source and licence).
+// Images are placeholders for the demo only: replace them from the admin product and category forms.
+const CATEGORY_DEFS = [
+  { name: 'Tops', description: 'Performance tees, tanks and training tops.' },
+  { name: 'Bottoms', description: 'Shorts, joggers and leggings built to move.' },
+  { name: 'Hoodies & Jackets', description: 'Warm-ups, layers and weather protection.' },
+  { name: 'Sports Bras', description: 'Support for every level of impact.' },
+  { name: 'Accessories', description: 'Bags, bottles, caps and training gear.' },
+  { name: 'Swimwear', description: 'Chlorine-resistant training swimwear and swim accessories.' },
+  { name: 'Running Essentials', description: 'Lightweight running tees, shorts and reflective gear.' },
+  { name: 'Yoga & Studio', description: 'Flexible studio wear for yoga, Pilates and mobility work.' },
 ];
+/** Every category gets a clean generated placeholder (client/public/images/categories/<slug>.webp). */
+export const CATEGORIES = CATEGORY_DEFS.map((c) => ({ ...c, image: categoryImagePath(slugOf(c.name)) }));
 
 const C = {
   black: { name: 'Black', hex: '#0A0A0A' }, white: { name: 'White', hex: '#F5F5F5' }, orange: { name: 'Orange', hex: '#FF5A1F' },
@@ -118,16 +119,21 @@ export const PRODUCTS = [
     description: 'Soft stretch shorts with a flat waistband and an unrestricted leg. Built for mobility work and warm-ups.' }),
 ];
 
-export const productImages = (prod) => pick(prod.pool, prod.start);
+/** One local demo photo per product (client/public/images/products/demo/<slug>.webp). Replace it from the admin product form. */
+export const productImages = (prod) => [demoPhotoPath(PHOTO_BY_SLUG[slugOf(prod.name)])];
 
 /** Deterministic demo stock: mostly healthy, with a few low-stock and sold-out variants to exercise the UI. */
 export function demoVariants(slugLike, sizes, colors) {
   let h = 0;
   for (const ch of slugLike) h = (h * 31 + ch.charCodeAt(0)) % 997;
-  return sizes.flatMap((size, i) => colors.map((c, j) => {
+  const rows = sizes.flatMap((size, i) => colors.map((c, j) => {
     const v = (h + i * 7 + j * 13) % 14;
     return { size, color: c.name, stock: v < 2 ? 0 : v < 4 ? v : v + 2 };
   }));
+  // A product must never be sold out in every size and colour. Only a product that would otherwise have no stock at all
+  // is changed: its first variant gets a little stock. Products with at least one available variant are not affected.
+  if (rows.length && rows.every((r) => r.stock === 0)) rows[0].stock = 2;
+  return rows;
 }
 
 export const REVIEWERS = ['Omar K.', 'Nour H.', 'Youssef A.', 'Mariam S.', 'Karim F.'];

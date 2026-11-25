@@ -96,7 +96,13 @@ async function placeOrder(input, user) {
         reserved.push(l);
       }
       if (quote.coupon) {
-        if (!(await Coupon.redeem(quote.coupon.id, opts))) throw ApiError.conflict('This coupon has just reached its usage limit.', [{ field: 'couponCode', message: 'This coupon has just reached its usage limit' }]);
+        if (!(await Coupon.redeem(quote.coupon.id, { ...opts, code: quote.coupon.code }))) {
+          // Bound to the quoted code: if the coupon was renamed after the quote, the redemption fails rather than recording
+          // usage under a code that no longer exists.
+          const now = await Coupon.findById(quote.coupon.id).select('code').session(session ?? null).lean();
+          if (!now || now.code !== quote.coupon.code) throw ApiError.badRequest('This coupon code is no longer valid. Please review your cart.', [{ field: 'couponCode', message: 'This coupon code is no longer valid' }]);
+          throw ApiError.conflict('This coupon has just reached its usage limit.', [{ field: 'couponCode', message: 'This coupon has just reached its usage limit' }]);
+        }
         couponId = quote.coupon.id;
       }
       return { order: await new Order(orderData()).save(opts), duplicate: false };

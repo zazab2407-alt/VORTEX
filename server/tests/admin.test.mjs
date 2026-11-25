@@ -50,7 +50,7 @@ describe('Admin operations', { skip }, () => {
     test('totals: orders, revenue (cancelled excluded), products, customers (demo reviewers and admins excluded)', async () => {
       const r = await call('GET', '/admin/stats', { cookie: admin });
       assert.equal(r.status, 200);
-      assert.deepEqual(r.body.data.totals, { orders: 3, revenue: 150.5, products: 16, customers: 2, pendingOrders: 1 });
+      assert.deepEqual(r.body.data.totals, { orders: 3, revenue: 150.5, products: 40, customers: 2, pendingOrders: 1 });
     });
     test('recent orders newest first; best sellers by units sold', async () => {
       const d = (await call('GET', '/admin/stats', { cookie: admin })).body.data;
@@ -64,18 +64,18 @@ describe('Admin operations', { skip }, () => {
     test('products include hidden ones, and support the shop filters and paging', async () => {
       const cap = await Product.findOne({ slug: 'vortex-pro-cap' }); await Product.updateOne({ _id: cap._id }, { isActive: false });
       const all = await call('GET', '/admin/products?limit=50', { cookie: admin });
-      assert.equal(all.body.meta.total, 16); assert.equal(all.body.data.find((p) => p.slug === 'vortex-pro-cap').isActive, false);
-      assert.equal((await call('GET', '/products?limit=50')).body.meta.total, 15, 'the public shop hides it');
-      assert.equal((await call('GET', '/admin/products?q=cap', { cookie: admin })).body.data[0].slug, 'vortex-pro-cap');
-      assert.equal((await call('GET', '/admin/products?limit=5&page=4', { cookie: admin })).body.data.length, 1);
+      assert.equal(all.body.meta.total, 40); assert.equal(all.body.data.find((p) => p.slug === 'vortex-pro-cap').isActive, false);
+      assert.equal((await call('GET', '/products?limit=50')).body.meta.total, 39, 'the public shop hides it');
+      assert.equal((await call('GET', '/admin/products?q=pro%20cap', { cookie: admin })).body.data[0].slug, 'vortex-pro-cap');
+      assert.equal((await call('GET', '/admin/products?limit=6&page=7', { cookie: admin })).body.data.length, 4);
       assert.equal((await call('GET', '/admin/products?sort=nope', { cookie: admin })).status, 400);
       await Product.updateOne({ _id: cap._id }, { isActive: true });
     });
     test('categories include hidden ones, with product counts', async () => {
       await Category.create({ name: 'Hidden Cat', isActive: false });
       const r = await call('GET', '/admin/categories', { cookie: admin });
-      assert.equal(r.body.data.length, 6); assert.equal(r.body.data.find((c) => c.name === 'Hidden Cat').isActive, false);
-      assert.equal((await call('GET', '/categories')).body.data.length, 5, 'public list still hides it');
+      assert.equal(r.body.data.length, 9); assert.equal(r.body.data.find((c) => c.name === 'Hidden Cat').isActive, false);
+      assert.equal((await call('GET', '/categories')).body.data.length, 8, 'public list still hides it');
     });
   });
 

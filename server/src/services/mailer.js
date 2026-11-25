@@ -11,14 +11,23 @@ export const isEmailConfigured = () => Boolean(testTransport || config.smtp.enab
 /** The contact form needs both a way to send mail and an inbox to send it to (CONTACT_TO). */
 export const isContactFormEnabled = () => isEmailConfigured() && Boolean(config.contact.to);
 
+/**
+ * The one place that builds the real SMTP transport. Exported so the SMTP stub test can exercise exactly the production
+ * options; `overrides` is for tests only (for example a short greetingTimeout).
+ */
+export function createSmtpTransport(smtp, overrides = {}) {
+  return nodemailer.createTransport({
+    host: smtp.host, port: smtp.port, secure: smtp.port === 465,
+    auth: { user: smtp.user, pass: smtp.pass },
+    connectionTimeout: 8000, greetingTimeout: 8000, socketTimeout: 15000,
+    ...overrides,
+  });
+}
+
 function getTransport() {
   if (testTransport) return testTransport;
   if (!config.smtp.enabled) return null;
-  transport ??= nodemailer.createTransport({
-    host: config.smtp.host, port: config.smtp.port, secure: config.smtp.port === 465,
-    auth: { user: config.smtp.user, pass: config.smtp.pass },
-    connectionTimeout: 8000, greetingTimeout: 8000, socketTimeout: 15000,
-  });
+  transport ??= createSmtpTransport(config.smtp);
   return transport;
 }
 

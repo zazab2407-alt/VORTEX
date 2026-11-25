@@ -4,7 +4,7 @@ import { GENDERS } from '../models/Product.js';
 import { OBJECT_ID, isObjectId } from '../utils/objectId.js';
 
 const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
-const IMAGE_URL = /^(https?:\/\/\S+|\/uploads\/\S+)$/i;
+const IMAGE_URL = /^(https?:\/\/\S+|\/(?:uploads|images)\/\S+)$/i; // /images/ = the locally hosted catalogue photos (client/public/images)
 
 export const productListQuery = [
   query('page').optional().isInt({ min: 1, max: 100000 }).withMessage('page must be a positive whole number').toInt(),
@@ -40,7 +40,7 @@ export function productBody({ partial = false } = {}) {
     f(body('price')).bail().isFloat({ min: 0, max: 100000 }).withMessage('Price must be a number from 0 to 100000').toFloat(),
     body('salePrice').optional({ values: 'null' }).isFloat({ min: 0, max: 100000 }).withMessage('Sale price must be a number from 0 to 100000').toFloat(),
     f(body('images')).bail().isArray({ min: 1, max: 10 }).withMessage('Provide 1 to 10 images'),
-    body('images.*').optional().isString().trim().matches(IMAGE_URL).withMessage('Each image must be an http(s) URL or an /uploads/ path').isLength({ max: 500 }),
+    body('images.*').optional().isString().trim().matches(IMAGE_URL).withMessage('Each image must be an http(s) URL or an /uploads/ or /images/ path').isLength({ max: 500 }),
     f(body('category')).bail().matches(OBJECT_ID).withMessage('category must be a valid category id'),
     f(body('gender')).bail().isIn(GENDERS).withMessage(`Gender must be one of: ${GENDERS.join(', ')}`),
     f(body('sizes')).bail().isArray({ min: 1, max: 12 }).withMessage('Provide 1 to 12 sizes').bail().custom(unique('sizes')),

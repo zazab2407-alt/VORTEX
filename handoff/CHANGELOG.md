@@ -311,8 +311,235 @@ Owner-tested result before this change: `node src/seed/seed.js` with `MONGO_URI`
 - `seedCatalog()`'s catalogue logic, the CLI checks, and all other application code are unchanged.
 - Phase 7 is still **not complete**.
 
+## 2026-11-22 — Repair Phase 1: stock generator and outdated test expectations (TESTED)
+
+Context: the owner's full run (`F:\vortex\handoff\test-logs\full-run-security-fix.txt`) reported 374 tests, 356 passed, 15 failed, 3 skipped. Fifteen failures: 14 outdated expectations and 1 seed-data issue (Dryline Swim Towel had zero stock).
+
+**Test result after Phase 1 (owner-run on Windows, full suite `npm test` in `F:\vortex\server`, standalone MongoDB):** Tests 374; Passed 371; Failed 0; Skipped 3; Cancelled 0.
+
+The 3 skipped tests are the replica-set-only transaction subtests in `transactions.test.mjs`. They require a MongoDB Replica Set and skip on the standalone MongoDB used for this run. They were NOT run and are NOT claimed as passed. They still need a replica-set run.
+
+### `F:\vortex\server\src\seed\catalog.js`
+
+- Status: MODIFIED
+- Change: `demoVariants()` returns the same rows as before. If every generated row would have zero stock, the first row gets stock 2. Products with at least one available variant are unchanged.
+- Reason: Dryline Swim Towel (slug `dryline-swim-towel`, hash 211) generated zero stock for both colours.
+- Related functionality: seeded stock only. No runtime checkout, inventory or admin logic changed.
+- Verification: **TESTED.** Full suite passed on the owner's Windows machine (see the result above).
+
+### `F:\vortex\server\tests\admin.test.mjs`
+
+- Status: MODIFIED
+- Change: outdated counts updated to the catalogue (products 40, public products 39, categories 9 admin / 8 public, paging with 40 products). The search term for the hidden-product check changed from `cap` to `pro cap`, because Pacific Swim Cap also matches `cap`. Assertions and meanings are unchanged.
+- Verification: **TESTED.** Passed in the owner's full suite run (see the result above).
+
+### `F:\vortex\server\tests\products.api.test.mjs`
+
+- Status: MODIFIED
+- Change: outdated expectations updated to the catalogue: totals, paging (40 products, 4 pages), cheapest effective price 14, gender counts (men 25 / exact 13 / women 27 / exact 15 / unisex 12), XS count 15, collection counts (new 9, best 7 names, sale 8), search "hood" (adds Zephyr, which matches its description), search "tee" with women filter (adds Cadence Crop Tee), categories (8, sum 40), and the inactive-product search term changed from `singlet` (which also matches Stride Singlet) to `test runner singlet`.
+- Verification: **TESTED.** Passed in the owner's full suite run (see the result above).
+
+### Not changed
+
+- No product names, slugs, prices, descriptions, categories or sizes. The 13 renames and the Calm move were not applied.
+- No authentication, authorization, checkout, payment, inventory or admin logic.
+- No database configuration, and no database was touched by the assistant.
+
+## 2026-11-22 — Phase 7 continuation: currency sweep (NOT compiled or tested)
+
+### Files modified
+
+- `F:\vortex\client\src\pages\admin\ProductForm.tsx`: the two price labels (`Price ($)`, `Sale price ($, optional)`) now use `currencySymbol` from `useShopConfig()`.
+- `F:\vortex\client\src\pages\Shop.tsx`: the price-range filter chip uses `currencySymbol` instead of a hard-coded `$`.
+- `F:\vortex\client\src\components\FilterPanel.tsx`: the price-range labels use `currencySymbol` instead of a hard-coded `$`.
+- Reason: the only hard-coded currency symbols found by reading the client source. All other money output goes through `formatPrice()` or the config-driven shipping text.
+- Verification: **NOT compiled, built or browser-tested.** `npx tsc -b` and `npm run build` must be run by the owner. The `label` prop of `components/Field.tsx` was not read in this session; it is assumed to accept a string, which the template literal provides.
+
+### Read and found clean (no change)
+
+Admin: Dashboard, Orders, OrderDetail, Products, Coupons, Customers, CustomerDetail. Storefront: Cart, Checkout, ProductDetail, Shop (apart from the chip above), Account, OrderConfirmation, OrderDetail, TrackOrder, Wishlist, Home, Login, Register, Faq, Returns, Privacy (via `PolicyPage`), Contact. Components: ProductCard, CartDrawer, OrderView, Footer, AnnouncementBar, Navbar, Layout, PolicyPage, RouteGuards, FilterPanel (apart from the labels above). Data and utilities: content.ts, storeText.ts, policies.ts, format.ts, useShopConfig.ts, CartContext.tsx.
+
+Not read in this session (small presentational or service modules): Field, Pagination, ErrorState, ConfirmDialog, StatusBadge, Rating, QuantitySelector, ProductGrid, SectionHeading, Reveal, Img, Logo, NotFound, services, AuthContext, ToastContext, WishlistContext.
+
+### Confirmed in source during this review (no change needed)
+
+- Routes for `/faq`, `/contact`, `/privacy`, `/returns`, `/admin/coupons` and `/admin/customers` exist in `App.tsx`.
+- `ConfigGate` (keyed remount on currency or locale change) is present in `App.tsx`.
+- The newsletter form is not present in `Home.tsx`. The handoff report's statement that the edit failed is out of date.
+- Admin sidebar links for Coupons and Customers exist in `AdminLayout.tsx`.
+
+### Known limitations left in place
+
+- `PRICE_MIN` and `PRICE_MAX` (0 to 150) in `FilterPanel.tsx` and the price slider are fixed in the store currency's scale. With a currency of very different magnitude, the slider range would need a server-side setting. Not changed: a business decision.
+- Contact page and policy placeholders: `Contact.tsx` writes `[PLACEHOLDER ...]` inline as plain text, while `PolicyPage` highlights placeholders. Not changed.
+
+### Not changed
+
+- No product, checkout, payment, inventory, authentication or database behaviour. No catalogue content. No `.env` file. No database.
+- No test was run. No build was run. No ZIP was created.
+
+## 2026-11-22 — Security batches: Nodemailer (D1), login throttle (A1), coupon atomic update (A2) — IMPLEMENTED, NOT VERIFIED
+
+All changes below are implemented in source and tests. **None has been run.** The assistant cannot run `npm`, `node` or MongoDB. Owner must run the checks listed for each batch and paste the output.
+
+### D1 — Nodemailer (part 1: code and test; dependency bump pending)
+
+- `F:\vortex\server\src\services\mailer.js`: transport construction moved to `createSmtpTransport(smtp, overrides)`, exported. Same options as before (`secure` for port 465, `auth`, `connectionTimeout` 8000, `greetingTimeout` 8000, `socketTimeout` 15000). `getTransport()` calls it. No behaviour change.
+- `F:\vortex\server\tests\mailerSmtp.test.mjs` (CREATED): real Nodemailer transport against a local SMTP stub built on Node's built-in `net` module. Covers verify (EHLO, AUTH PLAIN), a complete confirmation message accepted with the envelope recipient checked, `greetingTimeout` honoured (a silent server fails within 3 s), and a rejected login reported as a failure.
+- Reason: `mailer.test.mjs` injects a fake transport in every case, so the suite never ran Nodemailer itself.
+- **Dependency NOT changed.** `server/package.json` and `server/package-lock.json` are unchanged. The assistant cannot run `npm install`, and editing the manifest without regenerating the lockfile would break `npm ci`. The exact command is in the session report.
+- Verification: **Not run.** Owner: `cd F:\vortex\server` then `npm test`.
+
+### A1 — Per-account login throttle
+
+- `F:\vortex\server\src\middleware\rateLimiter.js`: added `ACCOUNT_LOGIN_WINDOW_MS` (15 minutes), `ACCOUNT_LOGIN_LIMIT` (30), `createAccountLoginLimiter({ windowMs, limit })` and `loginAccountLimiter`. Fixed window per normalised email (or per IP if no email is supplied). Only failed attempts count. The 429 message is the same whether or not the account exists. No permanent lockout.
+- `F:\vortex\server\src\routes\authRoutes.js`: `POST /auth/login` now runs `authLimiter` (per IP, unchanged) then `loginAccountLimiter`, before validation.
+- `F:\vortex\server\tests\loginThrottle.test.mjs` (CREATED): unit tests of the window (429 on the fourth failure, separate emails independent, case and spaces normalised, window expiry after 450 ms) and database tests (30 failures from 30 addresses via `X-Forwarded-For` with `trust proxy` set, the 31st refused; a correct password is refused while throttled; unknown and real emails get identical 401 and 429 bodies; 40 successful logins are not counted; a throttled account does not block another).
+- Known residual risk: a distributed attacker can throttle a real customer's login for up to 15 minutes. This is the accepted trade-off for approved design.
+- Verification: **Not run.**
+
+### A2 — Coupon update is one atomic write
+
+- `F:\vortex\server\src\controllers\couponController.js`: `updateCoupon` rewritten. It computes every requested change, validates the coupon in memory with the same schema rules, then issues one `findOneAndUpdate` whose filter re-checks: `usedCount: 0` while the code is changing, and `usedCount <= newLimit` when the limit changes. If the write matches nothing, the current state is read and the specific reason is returned (code used, limit below usage, or a concurrent change). Nothing is partially applied. `usedCount` is never written from this endpoint. All other functions are unchanged.
+- Business rules preserved: a used coupon keeps its code; the limit cannot be lower than the usage count; the expiry must be in the future when changed.
+- `F:\vortex\server\tests\couponAtomic.test.mjs` (CREATED): refused limit change applies no other field; limit equal to usage accepted; multi-field edit applied entirely, including clearing fields; used coupon keeps its code while other fields change; invalid field refuses the whole edit; `usedCount` never written; concurrency tests (limit reduction against six parallel checkouts, and a code change against two parallel redemptions of the old code).
+- Verification: **Not run.** Note: the old code called `save()`; the new code calls `validate()` and a single `findOneAndUpdate`. `Coupon.js` was read earlier and has no `pre('save')` hook that would now be skipped; owner should confirm with the test run.
+
+### Not changed in this batch
+
+- `server/package.json`, `server/package-lock.json`, `client/package.json`, `client/package-lock.json`: unchanged.
+- No commit, no stage, no push. Existing uncommitted changes preserved.
+
+## 2026-11-22 — Coupon rename vs. redemption race fixed — IMPLEMENTED, NOT VERIFIED
+
+Owner run (replica set): 396 tests, 395 passed, 1 failed. Failure: `couponAtomic.test.mjs` "concurrency: a code change cannot race a redemption of the old code".
+
+**Cause:** checkout looked the coupon up by code (`buildQuote`, `Coupon.findOne({ code })`) and later redeemed it by `_id` only (`Coupon.redeem(id)`). A rename committed between those two steps (usage count still 0, so the rename was allowed) and the redemption still succeeded on the renamed coupon. The order was saved with the old code, so the usage was recorded on a coupon the order no longer names, and the cancellation refund (looked up by code) could never find it.
+
+**Fix:**
+- `F:\vortex\server\src\models\Coupon.js`: `redeem(id, options)` accepts an optional `code`; when given it is part of the atomic filter, so a renamed coupon refuses the stale redemption. Calls without `code` behave as before.
+- `F:\vortex\server\src\services\orderService.js`: checkout redeems with the quoted code. If the redemption is refused because the code changed, it returns a 400 "no longer valid" message (the usage-limit 409 is unchanged). The check runs in the same transaction when one is in use.
+- `F:\vortex\server\tests\couponAtomic.test.mjs`: two regression tests added (model-level binding, and checkout with an old code after a rename). The failing concurrency test is unchanged.
+
+No change to coupon business rules. A used coupon still keeps its code; the rename itself is still refused while the coupon has been used.
+
+- Verification: **Not run.** Owner: `npm test` in `F:\vortex\server` (replica set).
+
 ## Unrelated existing issues noted (not changed)
 
 - `server/src/seed/seed.js` deletes all products, categories, reviews and demo users before reseeding. It has a production guard, and since the database guard was added it refuses any database other than `vortex_playground`.
 - `client/src/data/catalog.ts` and `server/src/seed/catalog.js` duplicate the colour palette. They must be kept in sync by hand.
 - `server/.env.example` defaults `MONGO_URI` to the original `vortex` database.
+
+
+---
+
+## 2026-11-24 — Coupon rename vs. checkout race: stress evidence
+
+### Stress harness added
+
+- Status: CREATED
+- File: `F:\vortex\server\tests\stress\couponRace.stress.mjs`
+- Not part of `npm test` (the name does not match `*.test.mjs`). Run it manually; it needs `MONGO_TEST_URI`.
+- What it does: boots the real app through `setupApi`, then in every iteration races the real `PATCH /admin/coupons/:id` (rename) against several real `POST /orders` checkouts using the OLD code, plus two checkouts using the NEW code, with randomised start order and jitter. Every 5th iteration the coupon is already used before the rename.
+- Checked after every race: coupon code, `usedCount`, number of orders under the old and new code, `usedCount <= usageLimit`, no 5xx responses, stock changed by exactly the number of orders created, and the rule "a renamed coupon was never redeemed under its old code".
+- Each worker uses its own database (`vortex_test_<STRESS_NAME>`).
+- Test status: **Passed** (executed by the assistant, results below).
+
+### Results (MongoDB 8.2 on Windows, Node v26.13.0)
+
+| Scenario | Workers x iterations | Orders per race | Races | Violations | Rename won / refused |
+|---|---|---|---|---|---|
+| Replica set `rs0`, idle machine | 4 x 500 | 3 old + 2 new code | 2000 | 0 | 359 / 1641 |
+| Replica set `rs0`, while the full server suite ran | 4 x 300 | 8 old + 2 new code | 1200 | 0 | 190 / 1010 |
+| Standalone (compensating-rollback path) | 4 x 250 | 4 old + 2 new code | 1000 | 0 | 171 / 829 |
+
+- Both outcomes occurred in volume: the rename won and every old-code checkout was refused, or a checkout won and the rename was refused with 409.
+- Full server suite on the replica set: 9 consecutive runs, each 398 tests, 398 passed, 0 failed, 0 skipped, 0 cancelled. `couponAtomic.test.mjs` alone: 10 runs, 10/10 passed.
+- The earlier single failure of `concurrency: a code change cannot race a redemption of the old code` could NOT be reproduced. No production code was changed because no failing interleaving was found. No deterministic regression test was added, since no reproducible race exists to pin down. The existing deterministic tests (`redemption is bound to the code...` and `after a rename, checkout with the old code is refused...`) are unchanged.
+- Possible explanation (not proven): `Coupon.js`, `couponController.js` and `orderService.js` carry uncommitted changes, including the code-bound `Coupon.redeem`. The failing run may have executed before those changes were saved. If it fails again, keep the full TAP output and re-run the stress harness with the same `MONGO_TEST_URI`.
+
+### Local test infrastructure
+
+- A throwaway replica set was started for testing: `mongod --replSet rs0 --port 27020 --dbpath C:\data\vortex-rs`, URI `mongodb://127.0.0.1:27020/vortex_test?replicaSet=rs0`. It is outside the repository and does not touch the `vortex` database on port 27017.
+
+---
+
+## 2026-11-24 — Nodemailer 6.10.1 → 10.6.1
+
+### Dependency upgrade
+
+- Status: MODIFIED
+- Files: `F:\vortex\server\package.json` (`"nodemailer": "^6.9.16"` → `"^10.6.1"`), `F:\vortex\server\package-lock.json` (nodemailer 6.10.1 → 10.6.1; no other package changed).
+- Installed with `npm install nodemailer@^10.6.1` (no `--force`, no other dependency touched). Backups of both files were taken first in `%TEMP%`.
+- Why: the baseline `npm audit` in `server/` reported one HIGH vulnerability, nodemailer `<=10.1.3`, with 10.6.1 as the fix. The upstream changelog and advisory databases also list fixes for older ranges (for example the CRLF injection in the transport `name` option fixed in 8.0.5, and the nested-recipient-array stack exhaustion fixed in 10.0.2).
+- Breaking changes reviewed in the official changelog (6.10.1 → 10.0.11 was read in full; 10.6.1 was confirmed as the registry `latest` with `engines.node >= 20`):
+  - 7.0.0: SES SDK changes. Not used by this project.
+  - 8.0.0: error code `NoAuth` renamed `ENOAUTH`. Nothing in `server/` references `NoAuth`; the code only logs `err.code`, and the existing tests use `EAUTH`, which is unchanged.
+  - 9.0.0: TLS certificates are now validated by default for HTTPS fetches (attachment URLs, OAuth2, proxy CONNECT). The project does not use these.
+  - 10.0.0: Node.js 20+ required; TypeScript rewrite with ESM and CommonJS builds. Verified: `import nodemailer from 'nodemailer'` (used in `src/services/mailer.js`) works on Node v26.13.0.
+- No source change was needed in `src/services/mailer.js`: `createTransport` options (host, port, secure, auth, connectionTimeout, greetingTimeout, socketTimeout), `sendMail` and `verify()` behave as before.
+- Test status: **Passed** (see below).
+
+### Tests extended
+
+- Status: MODIFIED (uncommitted file; existing 4 tests and all existing assertions unchanged)
+- File: `F:\vortex\server\tests\mailerSmtp.test.mjs`: 4 → 18 tests, using the real Nodemailer transport against a local SMTP stub built on Node's `net` module.
+- The stub gained options: `rcptReply`, `dataReply`, `stallAfterEhlo`, `dropAfterGreet`.
+- New coverage:
+  - SMTP errors: 550 recipient rejection, 451 temporary failure, 554 refusal after DATA (each reported with its response code, nothing stored).
+  - Connection failures: connection refused; connection dropped on the first command after the greeting.
+  - Timeouts: `socketTimeout` with a server that stops answering; the production `timeoutMs` limit in `mailer.js` with a stalled server.
+  - Production functions over real SMTP: `sendOrderConfirmation` ({ sent: true } only after acceptance; { sent: false, reason: 'failed' } on rejection; logs only the error code, never credentials or the customer address), `verifySmtp` (ok / `EAUTH` / unreachable).
+  - Message formatting: standard headers, multipart text + HTML in UTF-8, non-ASCII names, HTML escaping, CR/LF header injection in contact-form fields, dot-stuffing.
+- One test (connection dropped after the greeting) was racy in its first version (the stub dropped on a timer that lost the race against a fast localhost conversation). It was fixed in the stub (drop on the first command), not by weakening the assertion.
+
+### Results
+
+| Check | Command | Result |
+|---|---|---|
+| SMTP stub file, 5 consecutive runs | `node --test tests/mailerSmtp.test.mjs` | 18 tests, 18 passed, 0 failed, 0 skipped, 0 cancelled (each run) |
+| Full server suite, replica set `rs0` | `node --test "tests/**/*.test.mjs"` with `MONGO_TEST_URI=mongodb://127.0.0.1:27020/vortex_test?replicaSet=rs0` | 412 tests, 412 passed, 0 failed, 0 skipped, 0 cancelled |
+| Server dependency audit | `npm audit` in `server/` | found 0 vulnerabilities |
+
+- Not yet done: `npm audit` in `client/` (belongs to the remaining-dependency step), and a real send through a real provider (needs owner SMTP credentials; the local stub covers the protocol, not any specific provider's quirks).
+
+---
+
+## 2026-11-24 — React Router 7.18.6, redirect hardening, Multer 2.5.0
+
+### React Router 6.30.6 → 7.18.6 (declarative mode kept)
+
+- Status: MODIFIED. Files: `client/package.json` (`react-router-dom` `^6.28.1` → `^7.18.6`), `client/package-lock.json` (`react-router-dom` and `react-router` both 7.18.6).
+- Note: when I came to verify this migration, `package.json`, the lockfile and `node_modules` were already on 7.18.6 although this session had not run the install (changed between sessions, presumably by the owner). I verified the result rather than assuming it: `npm ls` shows a consistent tree, and every check below was run on 7.18.6.
+- Official v6 → v7 guide: v7 needs Node 20+, React 18+; no breaking changes once the v6 future flags are handled. The only flag relevant to this app, `v7_relativeSplatPath`, needs no change here: the only splat route is `path="*"` and there are no relative `../` links. All `React.lazy` calls are at module scope, so v7's transition-based updates are safe.
+- `App.tsx` is unchanged (BrowserRouter + Routes). The 31 files importing from `react-router-dom` are unchanged: v7 still publishes `react-router-dom` as a re-export of `react-router`.
+- Verified on 7.18.6: `npx tsc -b` exit 0; `npm run build` OK (main bundle 315.91 kB vs 315.77 kB on 6.30.6); `npm audit` 0 vulnerabilities; client tests 47/47.
+- NOT verified: clicking through the routes in a real browser (no browser access in this session). Owner steps: log out, open `/account` and `/admin` (expect redirect to `/login?next=...`, then back to the page after login), open a product link, add to cart, go through `/checkout`, open `/orders/<number>`, and confirm a nonsense URL shows the 404 page.
+
+### Redirect security (`safeNext`)
+
+- Status: MODIFIED `client/src/utils/safeNext.ts`; CREATED `client/tests/safeNext.test.mjs`; MODIFIED `client/package.json` (new `npm test` script: `node --test "tests/**/*.test.mjs"`). No new dependency: Node 26 runs the `.ts` file directly.
+- Bug fixed: the old check accepted values containing a tab, newline, carriage return or space, for example `/<TAB>/evil.com`, which browsers parse as `//evil.com`. Proven by running the old logic against those values (it returned them unchanged). The new version also rejects control characters and unicode whitespace and requires the value to resolve to the same origin. Normal paths, queries and fragments are unchanged.
+- Tests (47): 19 attack strings rejected, 10 legitimate destinations kept exactly, the encode → decode round trip used by `RequireAuth`/`RequireAdmin` → `Login`, the real router (in-memory) ending on the fallback page for every attack, and a smoke check that the 11 router exports the app uses still exist.
+
+### Multer 1.4.5-lts.2 → 2.5.0
+
+- Status: MODIFIED `server/package.json`, `server/package-lock.json` (multer 2.5.0; 14 transitive packages of Multer 1.x no longer needed; nothing else changed). Done as a separate step from the other upgrades.
+- Why: Multer < 2.0.0 has two high-severity denial-of-service flaws (CVE-2025-47935 stream-error memory leak; CVE-2025-47944 crash on a malformed multipart request). 2.0.0's only breaking change is the minimum Node version (10.16); this server runs Node 26. 2.1.0 is also flagged upstream as a security release. Stable 2.x currently ends at 2.5.0; 3.x is alpha only and was not used. I did not read the 2.2–2.5 notes line by line; the tests below are the evidence.
+- Project use is small: `src/middleware/upload.js` (memory storage, 5 MB, one file, no text fields, 2 parts), mounted only on `POST /api/admin/uploads` behind `requireAdmin`.
+- Bug fixed by the new tests: a malformed multipart body (garbage, truncated, malformed part header, no boundary) returned **500**. `src/middleware/upload.js` now wraps the parser so such requests return **400** with a fixed message that never echoes parser internals; `MulterError` and status-carrying errors pass through as before. The 5 MB message is unchanged.
+- Tests: CREATED `server/tests/uploadRobustness.test.mjs` (9): garbage body, no closing boundary, malformed header, missing boundary, nameless part, extra text field, JSON instead of multipart, 40 uploads aborted mid-stream, and a burst of mixed malformed/aborted requests; after each, the server must still answer and accept a valid upload. The existing 18 upload/admin tests in `admin.test.mjs` (valid PNG/JPEG/WebP, fake images, SVG/GIF, oversized, decompression bomb, wrong field, two files, hostile filename, customer 403, anonymous 401) pass unchanged.
+
+### Results
+
+| Check | Result |
+|---|---|
+| `npm test` in `client/` | 47 tests, 47 passed, 0 failed, 0 skipped |
+| `npx tsc -b`, `npm run build` in `client/` | exit 0, build OK |
+| Upload tests (`uploadRobustness` + `admin`), 3 consecutive runs | 27 tests, 27 passed each run |
+| Full server suite, replica set `rs0` | 421 tests, 421 passed, 0 failed, 0 skipped, 0 cancelled |
+| `npm audit` `server/` and `client/` | found 0 vulnerabilities (both) |
+
+- Dependencies deliberately NOT upgraded (major versions, no security reason): React 19, lucide-react 1.x, Express 5, Mongoose 9, express-rate-limit 8, dotenv 18, bcryptjs 3. Mongoose 8.24.8 has a newer patch (8.24.11) available.
+- Environment note: the local replica set (`mongod` on port 27020, data in `C:\data\vortex-rs`) had stopped (the machine apparently restarted) and was started again; it must be running for the database tests.

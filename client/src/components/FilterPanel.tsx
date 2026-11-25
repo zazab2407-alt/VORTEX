@@ -1,6 +1,7 @@
 import type { Gender, ProductFilters } from '../types';
 import { ALL_SIZES, FILTER_COLORS } from '../data/catalog';
 import { useCategories } from '../hooks/useCategories';
+import { useShopConfig } from '../hooks/useShopConfig';
 
 export const PRICE_MIN = 0;
 export const PRICE_MAX = 150;
@@ -16,6 +17,7 @@ const Group = ({ title, children }: { title: string; children: React.ReactNode }
 
 export default function FilterPanel({ filters, onChange, onClear }: Props) {
   const { categories, loading: catLoading } = useCategories();
+  const { currencySymbol } = useShopConfig();
   const categoryNames = categories?.map((c) => c.name) ?? [];
   const min = filters.minPrice ?? PRICE_MIN;
   const max = filters.maxPrice ?? PRICE_MAX;
@@ -75,7 +77,7 @@ export default function FilterPanel({ filters, onChange, onClear }: Props) {
       </Group>
 
       <Group title="Price">
-        <div className="mb-3 flex items-center justify-between text-sm font-semibold"><span>${min}</span><span>${max}{max === PRICE_MAX ? '+' : ''}</span></div>
+        <div className="mb-3 flex items-center justify-between text-sm font-semibold"><span>{currencySymbol}{min}</span><span>{currencySymbol}{max}{max === PRICE_MAX ? '+' : ''}</span></div>
         <label className="text-xs text-neutral-500">Min
           <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={5} value={min} className="w-full"
             onChange={(e) => { const v = Math.min(+e.target.value, max - 5); onChange({ minPrice: v <= PRICE_MIN ? undefined : v }); }} />
