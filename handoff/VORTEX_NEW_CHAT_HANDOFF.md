@@ -86,6 +86,10 @@ Copy-Item .env.example .env          # optional, only if the API is not on the d
 npm run dev                          # Vite dev server on port 5173, /api proxied to the server
 ```
 
+Important: if `NODE_ENV` is set to `production` in the shell, npm skips development dependencies (TypeScript, Vite).
+Use `npm ci --include=dev` (or clear `NODE_ENV`) in `client/`, otherwise `npx tsc -b` and `npm run build` fail with "tsc not recognized".
+This was found when verifying a fresh clone.
+
 **Checks:**
 
 ```powershell
@@ -178,14 +182,18 @@ SMTP is optional: without it, order emails are skipped and the contact form repo
 - Coupon and customer admin screens: written, not compiled or run in a browser.
 - Client components beyond routing and `safeNext` have no automated tests (cart, checkout, admin).
 - Replica-set tests on the current code.
-- Fresh clone and install (see the publishing report for that check).
+- (Verified now: a fresh clone of `project-sync/full-project` installs with `npm ci` and `npm ci --include=dev`, and passes
+  the client suite (47/47), `tsc -b`, `npm run build`, and the server suite (428 total, 425 passed, 0 failed, 3 skipped on standalone).)
 
 ## 11. Known problems (not fixed)
 
+Most items below come from the earlier audit documents (`SECURITY_AUDIT.md`, `MASTER_ENGINEERING_PLAN.md`). They are not
+re-verified in the current code. Re-check each one with a test before fixing it.
+
 Security and data integrity:
 - Logout does not revoke tokens on the server (tokens are stateless; only `tokenVersion` changes on password change).
-- Login-failure throttling is per IP and in memory. It does not work across processes, and shared networks can be blocked.
-- No account-level lockout.
+- Login-failure throttling exists per IP and per email (see `server/tests/loginThrottle.test.mjs`). Its counters are in
+  memory, so they are per process and do not share state across several servers. Confirm the storage before relying on it in production.
 - Registration reveals whether an email already has an account.
 - No password reset by email (not implemented; behaviour without SMTP is undecided).
 - Replayed idempotent checkout returns the full order, including the customer's address.
