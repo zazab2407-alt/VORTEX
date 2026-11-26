@@ -2,6 +2,8 @@ import type { Category, Paginated, Product, ProductFilters } from '../types';
 import { ApiClientError, apiGet } from './http';
 
 const OBJECT_ID = /^[a-f0-9]{24}$/i;
+/** Matches the server's per-page cap (MAX_LIMIT in server/src/utils/productQuery.js). */
+const MAX_IDS_PER_REQUEST = 50;
 
 /** Storefront data layer: every component talks to the backend only through these functions. */
 export const productService = {
@@ -24,11 +26,18 @@ export const productService = {
     return (await apiGet<Product[]>(`/products/${product.id}/related`, { params: { limit }, signal })).data;
   },
 
-  /** Ignores ids that cannot be real products (e.g. saved before the backend existed). */
+  /**
+   * Ignores ids that cannot be real products (e.g. saved before the backend existed).
+   * The API returns at most MAX_IDS_PER_REQUEST products per page, so larger lists are split into several requests.
+   */
   async byIds(ids: string[], signal?: AbortSignal): Promise<Product[]> {
-    const valid = ids.filter((i) => OBJECT_ID.test(i)).slice(0, 50);
+    const valid = ids.filter((i) => OBJECT_ID.test(i));
     if (valid.length === 0) return [];
-    return (await apiGet<Product[]>('/products', { params: { ids: valid.join(','), limit: 50 }, signal })).data;
+    const chunks: string[][] = [];
+    for (let i = 0; i < valid.length; i += MAX_IDS_PER_REQUEST) chunks.push(valid.slice(i, i + MAX_IDS_PER_REQUEST));
+    const pages = await Promise.all(chunks.map((chunk) =>
+      apiGet<Product[]>('/products', { params: { ids: chunk.join(','), limit: MAX_IDS_PER_REQUEST }, signal }).then((r) => r.data)));
+    return pages.flat();
   },
 };
 

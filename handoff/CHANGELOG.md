@@ -543,3 +543,59 @@ No change to coupon business rules. A used coupon still keeps its code; the rena
 
 - Dependencies deliberately NOT upgraded (major versions, no security reason): React 19, lucide-react 1.x, Express 5, Mongoose 9, express-rate-limit 8, dotenv 18, bcryptjs 3. Mongoose 8.24.8 has a newer patch (8.24.11) available.
 - Environment note: the local replica set (`mongod` on port 27020, data in `C:\data\vortex-rs`) had stopped (the machine apparently restarted) and was started again; it must be running for the database tests.
+
+---
+
+## 2026-11-26 — Issues #27–#30 (local, UNCOMMITTED) and README corrections
+
+The changes below exist only in the working tree of `F:\vortex`. Nothing has been committed, pushed, merged or reviewed by the owner. HEAD is `1141469aec33c3322b3d382d26ba248d3644d5e9` on branch `project-sync/full-project`. Test results are from this session (2026-11-26) unless marked **historical**.
+
+### Issue #27 — Wishlist 50-item limit
+
+- Status: MODIFIED (uncommitted). File: `F:\vortex\client\src\services\api.ts`.
+- Cause: `productService.byIds` cut the saved IDs to 50 and the server caps each page at 50 (`MAX_LIMIT` in `server/src/utils/productQuery.js`). The Wishlist cleanup then removed any saved product that was not returned.
+- Change: IDs are split into requests of at most 50 and the results are combined. The truncation is removed.
+- Verification: a standalone harness outside the repository (system temp folder) ran the real `api.ts` with a stub `apiGet`: **9/9 checks passed**. Covered: 51 IDs → 2 requests (50 + 1), 100 IDs → 2 requests, invalid IDs filtered and never sent, combined results, cleanup behaviour, the original code losing the 51st product (bug reproduced), and a failed chunk rejecting the whole call. The Wishlist cleanup was replicated in the harness; the React component was not executed. Not browser-tested.
+
+### Issue #28 — Mobile header (Account and Wishlist hidden below 640px)
+
+- Status: MODIFIED (uncommitted). File: `F:\vortex\client\src\components\Navbar.tsx`.
+- Change: Wishlist, Account and Cart visible on all widths; Search hidden in the header below 640px and reached from the mobile drawer, which opens the existing search bar; a close (X) button in the search bar below 640px; icons 36px (32px below 360px); logo scaled to 75% below 360px so it does not touch the icons; search input `min-w-0` so the row no longer overflows at 320px. Desktop classes unchanged.
+- Verification: headless Chrome, measured in the live page. Logo centred at 320, 375 and 425px with no overlap; Wishlist, Account and Cart pass hit-testing at 320px. **26/26 checks passed at 320px** (after two fixes), and **6/6 drawer checks passed at 375px**. The earlier 375/425/640 measurements were re-checked after the 320px fix and were unchanged. Visual (screenshot) review was not possible. The 320px touch targets are 32px, below the 44px guideline.
+
+### Issue #29 — Checkout summary and submit button too far down on mobile
+
+- Status: MODIFIED (uncommitted). File: `F:\vortex\client\src\pages\Checkout.tsx`.
+- Cause: on screens below `lg` the order summary and its Place order button come after all form sections, with no sticky element.
+- Change: the form has `id="checkout-form"`; below `lg` a fixed bottom bar shows the total and a Place order button linked to the form with the HTML `form` attribute, using the same `disabled` and submitting state; the inline button is hidden below `lg`; bottom padding and a safe-area inset are added below `lg`; below 360px the bar's total and button are smaller; the form grid is one column below `lg` (this also removed a 1px horizontal overflow at 320px, caused by the single column being sized to its widest content). Desktop unchanged.
+- Verification: headless Chrome with a **test-only API stub** (outside the repository) served the quote and the order endpoint. **23/23 checks passed** at 320, 375, 425 and 1280px, including: validation via the bar, one order request with the form values, the submitting state ("Placing your order..." and disabled), recovery after a failed order, no field under the bar at the end of the page, and desktop summary and button positions unchanged (261px and 871px). The safe-area inset (`env(safe-area-inset-bottom)`) evaluates to 0 because `index.html` does not set `viewport-fit=cover`; that file was not changed. Real devices not tested. A successful order against the real API was not tested.
+
+### Issue #30 — Reveal animations could leave content hidden
+
+- Status: MODIFIED (uncommitted). File: `F:\vortex\client\src\components\Reveal.tsx`.
+- Cause: every `Reveal` starts at `opacity-0` and is shown only by an `IntersectionObserver` callback. If the observer is missing, throws, or never fires, the content stays hidden. Also, `new IntersectionObserver` inside an effect with no error boundary unmounted the whole app when the observer was missing.
+- Change: content starts visible when the observer is missing or `prefers-reduced-motion` is set; the constructor is wrapped in try/catch; the observer still drives the normal fade-in (0.7s, unchanged); a fallback check measures each element's position one second after mount and on scroll/resize, so a silent observer cannot disable it; all observers, timers, animation frames and listeners are removed on unmount.
+- Verification: headless Chrome with injected observer variants (outside the repository): **20/20 checks passed**. Covered: missing observer, constructor throws, observer never fires (on-screen content revealed by the timer; below-fold content revealed by scrolling), one initial callback then silent, reduced motion (no observer created), normal scroll (below-fold hidden on load, revealed as scrolled past), and cleanup on unmount (no live observers; listener count back to baseline). Real old or restricted browsers not tested.
+
+### Verification summary for this session (2026-11-26)
+
+- `npx tsc -b`: exit 0 (run after the Issue #30 change).
+- Client `npm test`: 47 passed, 0 failed (run after the Issue #30 change).
+- `npm run build`: exit 0 (run after the Issue #30 change).
+- Not run this session: server `npm test`, replica-set tests, `npm run check:images` (needs internet), `npm audit`, any seed or database command.
+
+### README corrections (uncommitted)
+
+- Status: MODIFIED. File: `F:\vortex\README.md`.
+- Changes: React Router version corrected to 7.18.6 (verified in `client/package-lock.json`); seed guard described accurately (the `npm run seed` CLI accepts only `vortex_playground`; the shared `seedCatalog` function also accepts `vortex_test_<name>`); client test command and the 47-test file added; folder tree corrected (`client/tests/`, `client/src/App.tsx`, `server/src/index.js`, `server/src/app.js`, `server/scripts/`); Node.js 20 or newer documented as the recommended version from the handoff, with a note that neither `package.json` declares `engines` and there is no `.nvmrc`.
+
+### Corrections to earlier entries (history not rewritten)
+
+- **2026-11-22 "admin screens not compiled":** superseded. `npm run build` (which runs `tsc -b`) exited 0 on 2026-11-24 (see that entry) and again on 2026-11-26. The screens compile; they have **not** been run in a browser.
+- **2026-11-24 stress entry, "uncommitted changes" in `Coupon.js`, `couponController.js` and `orderService.js`:** as of 2026-11-26 `git status` shows none of these files modified relative to HEAD. Whether they are committed, or whether the earlier failing race run happened before a change was saved, is **unverified**; no Git history was inspected.
+- **Phase 7:** not changed by this entry. The last explicit statement (2026-11-22) is that Phase 7 is incomplete.
+
+### Not done
+
+- No Issue #23 (React Error Boundary) work. It remains outstanding.
+- Nothing committed, pushed, merged, reset, checked out or stashed. The `.tmp-*` files in the repository root and `server/` were not touched.

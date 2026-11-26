@@ -10,7 +10,7 @@ Payments are **Cash on Delivery only**. There are no online payments.
 
 | Part | Stack |
 |---|---|
-| Client (`client/`) | React 18, TypeScript, Vite 5, Tailwind CSS 3, react-router-dom 6, lucide-react |
+| Client (`client/`) | React 18, TypeScript, Vite 5, Tailwind CSS 3, react-router-dom 7.18.6, lucide-react |
 | Server (`server/`) | Node.js (ES modules), Express 4, MongoDB with Mongoose 8, express-validator, helmet, express-rate-limit, multer + sharp (uploads re-encoded to WebP), nodemailer, cloudinary (optional config) |
 | Auth | JWT in an httpOnly cookie `vortex_token`; passwords hashed with bcryptjs (12 rounds); `tokenVersion` invalidates old sessions after a password change |
 
@@ -18,10 +18,14 @@ Payments are **Cash on Delivery only**. There are no online payments.
 
 ```
 client/                 React storefront and admin (Vite)
+  src/App.tsx, src/main.tsx
   src/components  context  data  hooks  pages  pages/admin  services  types  utils
   scripts/check-images.mjs
+  tests/safeNext.test.mjs  client automated tests (npm test)
 server/                 Express API
+  src/index.js, src/app.js
   src/config  controllers  middleware  models  routes  seed  services  utils  validators
+  scripts/fetch-images.mjs (retired, do not run), scripts/sync-catalog-images.mjs
   tests/*.test.mjs      automated tests (plus helpers.mjs)
 PHASE7_HANDOFF.md       Phase 7 handoff report
 VORTEX_PROGRESS.md      project progress log
@@ -31,7 +35,7 @@ handoff/                CHANGELOG.md and handoff notes for the next session
 
 ## Requirements
 
-- Node.js (a version that supports ES modules and the lockfiles in the repository).
+- Node.js 20 or newer is the recommended version, taken from the project handoff (`handoff/VORTEX_NEW_CHAT_HANDOFF.md`, section 4). It is not an enforced project requirement: neither `package.json` declares an `engines` field, and there is no `.nvmrc`. The handoff records testing on Node.js v26.13.0.
 - MongoDB. A local standalone instance is enough for most work. Transaction tests need a **replica set** (see below).
 - Windows PowerShell commands are shown below. Other shells work with the equivalent commands.
 
@@ -117,7 +121,7 @@ It uses placeholder prices, descriptions, and Unsplash demo photos. The demo cou
 that `MONGO_URI` names, then recreates the demo catalogue. Customers, admins and orders are not deleted, but orders keep their own
 copy of product details.
 
-**Database guard:** the seed runs only when `MONGO_URI` names exactly the database `vortex_playground`.
+**Database guard:** `npm run seed` runs only when `MONGO_URI` names exactly the database `vortex_playground`. The reset function it calls (`seedCatalog` in `server/src/seed/seed.js`) also accepts a test database named `vortex_test_<name>`, where `<name>` is one or more letters, digits, `_` or `-`. The tests use that path with `MONGO_TEST_URI`. Any other name is refused, including `vortex`, and `vortex_test` on its own.
 
 - It checks the name before connecting and refuses if the name differs.
 - It checks the name again after connecting, before anything is deleted, and disconnects if the name differs.
@@ -141,7 +145,7 @@ and the guard checks that value. Close the window afterwards, or set the variabl
 
 Rules for seeding:
 
-- Use `vortex_playground` (or another name you have chosen for disposable data). The guard refuses every other name, including `vortex`.
+- Use `vortex_playground`. `npm run seed` refuses every other name, including `vortex` and `vortex_test_<name>`.
 - Always set `$env:MONGO_URI` first, so the guard checks the value you intend to use.
 
 #### Admin accounts
@@ -184,8 +188,11 @@ Client checks:
 cd client
 npx tsc -b
 npm run build
+npm test                         # client suite: 47 tests in tests/safeNext.test.mjs (Node's built-in test runner)
 npm run check:images             # needs internet; checks every Unsplash photo ID (see below)
 ```
+
+The client suite is the only automated client test. Its single file, `client/tests/safeNext.test.mjs`, contains 47 tests. The project handoff (`handoff/VORTEX_NEW_CHAT_HANDOFF.md`, section 10) records 47 passing and 0 failing in its last recorded run. That is a historical result, not a current one: run `npm test` to see the present status. Client components such as the cart and checkout have no automated tests.
 
 `npm run check:images` sends a request for each unique Unsplash photo ID found in `client/src/data/images.ts` and
 `server/src/seed/catalog.js`. It reports `OK` or `BROKEN` for each ID and which file uses it. It exits with a non-zero code if any ID is broken or Unsplash cannot be reached.

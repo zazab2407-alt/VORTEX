@@ -41,12 +41,12 @@ export default function Navbar() {
     setQ('');
   };
 
-  const icon = 'relative flex h-10 w-10 items-center justify-center transition-colors hover:text-brand';
+  const icon = 'relative flex h-9 w-9 items-center justify-center transition-colors hover:text-brand sm:h-10 sm:w-10 max-[359px]:h-8 max-[359px]:w-8';
   return (
     <header className={`sticky top-0 z-40 bg-white transition-shadow ${scrolled ? 'shadow-md' : 'border-b border-neutral-200'}`}>
       <div className="container-x flex h-16 items-center justify-between gap-4 lg:h-20">
         <button className={`${icon} lg:hidden`} onClick={() => setMenu(true)} aria-label="Open menu"><Menu size={24} /></button>
-        <div className="max-lg:absolute max-lg:left-1/2 max-lg:-translate-x-1/2"><Logo /></div>
+        <div className="max-lg:absolute max-lg:left-1/2 max-lg:-translate-x-1/2 max-[359px]:scale-75"><Logo /></div>
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
           {LINKS.map((l) => (
             <NavLink key={l.label} to={l.to} end
@@ -56,12 +56,12 @@ export default function Navbar() {
           ))}
         </nav>
         <div className="flex items-center">
-          <button className={icon} onClick={() => setSearch((s) => !s)} aria-label="Search">{search ? <X size={22} /> : <Search size={22} />}</button>
-          <Link to="/wishlist" className={`${icon} max-sm:hidden`} aria-label="Wishlist">
+          <button className={`${icon} max-sm:hidden`} onClick={() => setSearch((s) => !s)} aria-label="Search">{search ? <X size={22} /> : <Search size={22} />}</button>
+          <Link to="/wishlist" className={icon} aria-label="Wishlist">
             <Heart size={22} />
             {wishlist.ids.length > 0 && <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-neutral-950 px-1 text-[10px] font-bold text-white">{wishlist.ids.length}</span>}
           </Link>
-          <Link to={user ? '/account' : '/login'} className={`${icon} max-sm:hidden`} aria-label={user ? 'My account' : 'Log in'}>
+          <Link to={user ? '/account' : '/login'} className={icon} aria-label={user ? 'My account' : 'Log in'}>
             <UserIcon size={22} />
             {user && <span className="absolute bottom-1.5 right-1.5 h-2 w-2 rounded-full bg-brand" aria-hidden="true" />}
           </Link>
@@ -76,8 +76,9 @@ export default function Navbar() {
         <form onSubmit={submit} className="animate-fade-in border-t border-neutral-200 bg-white">
           <div className="container-x flex items-center gap-3 py-3">
             <Search size={20} className="text-neutral-400" />
-            <input ref={inputRef} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search leggings, hoodies, shorts..." className="h-10 flex-1 bg-transparent text-base outline-none" />
+            <input ref={inputRef} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search leggings, hoodies, shorts..." className="h-10 min-w-0 flex-1 bg-transparent text-base outline-none" />
             <button className="font-display text-lg font-bold uppercase tracking-wider text-brand">Search</button>
+            <button type="button" onClick={() => setSearch(false)} aria-label="Close search" className="text-neutral-500 sm:hidden"><X size={20} /></button>
           </div>
         </form>
       )}
@@ -97,6 +98,9 @@ export default function Navbar() {
                   {l.label}
                 </Link>
               ))}
+              <button onClick={() => { setMenu(false); setSearch(true); }} className="flex items-center gap-2 py-4 text-left font-display text-2xl font-semibold uppercase">
+                <Search size={20} /> Search
+              </button>
               <Link to="/wishlist" onClick={() => setMenu(false)} className="flex items-center gap-2 py-4 font-display text-2xl font-semibold uppercase">
                 <Heart size={20} /> Wishlist ({wishlist.ids.length})
               </Link>

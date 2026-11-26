@@ -3,6 +3,39 @@
 Use this file together with the repository to continue work in a new conversation, on any computer or account.
 It describes the project as it is now. Anything not marked as verified has not been run.
 
+## 0. Read first: uncommitted local work (do not overwrite)
+
+As of 2026-11-26, `git status` (read-only) shows these tracked files modified and **not committed**. HEAD is
+`1141469aec33c3322b3d382d26ba248d3644d5e9` on branch `project-sync/full-project`. Details: `handoff/CHANGELOG.md`, entry dated 2026-11-26.
+
+All 7 modified tracked files: `client/src/services/api.ts`, `client/src/components/Navbar.tsx`, `client/src/pages/Checkout.tsx`,
+`client/src/components/Reveal.tsx`, `README.md` (5 pre-existing, from earlier work); `handoff/VORTEX_NEW_CHAT_HANDOFF.md`,
+`handoff/CHANGELOG.md` (2 documentation files, changed in the documentation task only).
+
+**Group A: pre-existing modifications from earlier work (source files and README).** These were made before the documentation task.
+
+| File | Issue | What changed | Verification (2026-11-26) |
+|---|---|---|---|
+| `client/src/services/api.ts` | #27 Wishlist 50-item limit | `byIds` requests saved IDs in chunks of at most 50 and combines the results, so the Wishlist cleanup no longer removes items 51 and above | Standalone harness outside the repo: 9/9 passed. Cleanup logic replicated in the harness, not run in the component |
+| `client/src/components/Navbar.tsx` | #28 mobile header | Wishlist, Account and Cart visible on all widths; Search moved into the mobile drawer; smaller icons and logo below 360px; search input and close button fixed | Headless Chrome: no logo/icon overlap at 320, 375, 425px; 26/26 checks at 320px; 6/6 drawer checks at 375px |
+| `client/src/pages/Checkout.tsx` | #29 mobile checkout | Fixed bottom bar below `lg` with the total and a Place order button linked to the form; inline button hidden on mobile; one-column form below `lg` | Headless Chrome with a test-only API stub: 23/23 checks at 320, 375, 425, 1280px. Safe-area inset has no effect without `viewport-fit=cover` (not changed) |
+| `client/src/components/Reveal.tsx` | #30 reveal fallback | Content visible when the observer is missing, throws, never fires, or goes silent; reduced motion shows content at once; cleanup on unmount | Headless Chrome with injected observers: 20/20 passed. Real old browsers not tested |
+| `README.md` | documentation corrections (earlier task) | React Router 7.18.6; seed guard wording; client test section; folder tree; Node.js 20+ as recommended, not enforced | Documentation only; not reviewed by the owner |
+
+**Group B: documentation changes made in the documentation task (2026-11-26).** These are not source changes. They are not committed, and the owner has not reviewed or accepted them.
+
+| File | What changed | Status |
+|---|---|---|
+| `handoff/VORTEX_NEW_CHAT_HANDOFF.md` | This section 0 and the corrections to sections 1, 3, 4, 6, 9, 10, 11, 12 and 13 | Modified, uncommitted, not accepted by the owner |
+| `handoff/CHANGELOG.md` | A 2026-11-26 entry appended at the end; no earlier entries edited | Modified, uncommitted, not accepted by the owner |
+
+**Warnings for the next session:**
+- Do **not** run `git checkout`, `git reset`, `git stash`, `git clean`, or any command that discards these changes. Run `git status` and `git diff` first.
+- None of these changes has been committed, pushed, merged or reviewed by the owner. The owner has not run them as far as this record shows.
+- The four source files in Group A are in `client/src`. Keep their current content unless the owner asks for a change.
+- The untracked `.tmp-*` files in the repository root and in `server/` predate this work; their origin is not recorded here. Do not delete them without owner approval.
+- Issue #23 (React Error Boundary) is still outstanding and has not been started.
+
 ## 1. What VORTEX is
 
 VORTEX is a sportswear e-commerce store (demo catalogue, for sale as a template to future clients):
@@ -10,7 +43,7 @@ VORTEX is a sportswear e-commerce store (demo catalogue, for sale as a template 
 - **Storefront:** catalogue with filters and sorting, product pages with variants and stock, cart with a server-side quote,
   checkout (guest or logged in), order confirmation, order tracking and guest cancellation, account and order history, wishlist.
 - **Admin:** dashboard, orders, products, categories, uploads, coupons and customers (the coupon and customer screens were
-  written but not compiled or run in the last session; see section 10).
+  written, compiled as part of `npm run build` (recorded 2026-11-24 and again 2026-11-26), but not run in a browser; see section 10).
 - **Payments:** Cash on Delivery only. No payment provider is integrated.
 - **Status:** not deployed. Not production-ready. Do not deploy without the owner's approval.
 
@@ -25,7 +58,7 @@ VORTEX is a sportswear e-commerce store (demo catalogue, for sale as a template 
 ## 3. Repository layout
 
 ```
-README.md                      setup notes (older; this file is more current)
+README.md                      setup notes (corrected 2026-11-26; this file is the fuller handoff)
 .gitignore                     excludes .env, node_modules, client/dist, uploads, logs, test-logs, *.zip archives
 client/
   index.html, package.json, package-lock.json, vite.config.ts, tsconfig*.json, tailwind.config.js, postcss.config.js
@@ -62,11 +95,19 @@ handoff/
   VORTEX_NEW_CHAT_HANDOFF.md   this file
   CHANGELOG.md, MASTER_PROGRESS.md, IMAGE_LICENSES.md
   SECURITY_AUDIT.md, MASTER_ENGINEERING_PLAN.md, IMPLEMENTATION_PLAN.md   earlier audit and planning documents
+  test-logs/                   owner test-run output, historical (not re-run on 2026-11-26)
+  VORTEX_SOURCE_HANDOFF.zip    handoff archive (present; contents not checked in this update)
+
+Project reference documents at the repository root (read as references, not as current test results):
+  PHASE7_HANDOFF.md            Phase 7 handoff report. Phase 7 is NOT complete; this report is historical.
+  VORTEX_PROGRESS.md           progress log, kept as the permanent record. Its header and sections 12-13 were corrected 2026-11-22.
+  VORTEX_COMPLETE_AUDIT.md     business, UX and conversion audit. Reference only; it does not describe the current code.
 ```
 
 ## 4. Install and run
 
-Prerequisites: Node.js 20 or newer (tested on v26), npm, and a MongoDB instance (standalone is enough for development).
+Prerequisites: Node.js 20 or newer is the **recommended** version, taken from this handoff. It is not an enforced project requirement:
+neither `package.json` declares an `engines` field, and there is no `.nvmrc`. Testing was recorded on Node.js v26.13.0. Also npm, and a MongoDB instance (standalone is enough for development).
 
 **Server** (PowerShell):
 
@@ -130,7 +171,7 @@ SMTP is optional: without it, order emails are skipped and the contact form repo
   once in `mongosh`. The server detects transaction support automatically. Hosted MongoDB (Atlas) is a replica set.
 - **Seed (`npm run seed`) is destructive.** It deletes products, categories, reviews and demo accounts, then recreates the demo catalogue
   (8 categories, 40 products, 2 coupons). It refuses to run unless `MONGO_URI` names exactly `vortex_playground`, and it refuses
-  in production without `--force`. Never seed a database that holds real data.
+  in production without `--force`. The CLI (`npm run seed`) accepts only `vortex_playground`; the shared reset function `seedCatalog` also accepts a test database named `vortex_test_<name>`, which the tests use. Never seed a database that holds real data.
 - **Live-data image sync (`server/scripts/sync-catalog-images.mjs`)**: a one-off, non-destructive script. It refuses any database
   except `vortex_playground`, takes a JSON backup before writing, and only updates image fields or inserts missing catalogue rows.
   Default is a dry run; `--apply` writes. It was used once for the current demo images.
@@ -162,6 +203,7 @@ SMTP is optional: without it, order emails are skipped and the contact form repo
 - 8 categories and 40 products. Each product shows one demo photo, chosen by visual audit: men's products show male models
   or neutral equipment, women's products show female models or neutral equipment, unisex products show neutral imagery.
 - 46 product photos (`photo-01` to `photo-46`), 10 storefront photos, 8 generated category placeholders, 1 product placeholder.
+  (Counts recorded in an earlier session; **not re-checked on 2026-11-26**.)
 - All photos come from Wikimedia Commons under CC0, public domain, or CC BY 2.0/4.0. Source, photographer and licence for every
   file are in `server/src/seed/demoImages.json` and `handoff/IMAGE_LICENSES.md`.
 - The six old product folders under `client/public/images/products/` (core-duffel-bag, current-swim-shorts, hydra-shaker-bottle,
@@ -171,18 +213,21 @@ SMTP is optional: without it, order emails are skipped and the contact form repo
 
 ## 10. Current state
 
-**Verified in the last session (exact results):**
-- Server, standalone MongoDB: 428 tests, 425 passed, 0 failed, 3 skipped (the replica-set-only transaction tests).
-- Client: 47 tests, 47 passed. `tsc -b` clean. `npm run build` succeeds.
+**Results recorded in this handoff (historical unless dated 2026-11-26):**
+- Server, standalone MongoDB: 428 tests, 425 passed, 0 failed, 3 skipped (the replica-set-only transaction tests). Earlier session, **historical**; not re-run on 2026-11-26.
+- Client: 47 tests, 47 passed (**re-run 2026-11-26**, `npm test`). `npx tsc -b` exit 0 and `npm run build` exit 0 (**re-run 2026-11-26**, after the Issue #30 change).
+- Latest recorded replica-set server run: the Multer step, CHANGELOG 2026-11-24: 421 tests, 421 passed, 0 failed, 0 skipped. **Not re-run on 2026-11-26.** The Issue #27–#30 changes are client-only and have no server tests.
 - Earlier, a replica-set run (`rs0`) on an earlier code state: all three transaction tests passed; the only failure then was an
-  outdated seed image assertion, since fixed. **The replica-set run has not been repeated on the current code.**
-- Live site, checked in a headless browser: homepage 24 of 24 images load, shop 12 of 12, product pages 6 of 6, no fallback boxes.
+  outdated seed image assertion, since fixed.
+- Live site (historical, earlier session; not re-checked): homepage 24 of 24 images load, shop 12 of 12, product pages 6 of 6, no fallback boxes.
+
+**Phase 7:** not complete (last explicit statement: CHANGELOG 2026-11-22; no later entry marks it complete). The admin coupon and customer screens compile; they are not browser-tested.
 
 **Not verified:**
-- Coupon and customer admin screens: written, not compiled or run in a browser.
+- Coupon and customer admin screens: compiled as part of `npm run build` (recorded 2026-11-24, exit 0 again on 2026-11-26), not run in a browser.
 - Client components beyond routing and `safeNext` have no automated tests (cart, checkout, admin).
-- Replica-set tests on the current code.
-- (Verified now: a fresh clone of `project-sync/full-project` installs with `npm ci` and `npm ci --include=dev`, and passes
+- Replica-set tests on the current code (the last recorded run, 2026-11-24, predates the uncommitted Issue #27–#30 changes).
+- (Recorded in an earlier session; not re-verified on 2026-11-26: a fresh clone of `project-sync/full-project` installs with `npm ci` and `npm ci --include=dev`, and passes
   the client suite (47/47), `tsc -b`, `npm run build`, and the server suite (428 total, 425 passed, 0 failed, 3 skipped on standalone).)
 
 ## 11. Known problems (not fixed)
@@ -203,10 +248,10 @@ Security and data integrity:
 - Guest cancellation uses order number and email only.
 - Failed confirmation emails are not retried.
 - Cash on Delivery becomes "paid" automatically on delivery, with no separate collection step.
-- The seed script deletes data in any database named `vortex_playground`; the guard is by name only.
+- The seed resets data in `vortex_playground` (via the CLI) and in any `vortex_test_<name>` database when `seedCatalog` is called directly (as the tests do). The guard is by name only.
 - Some old demo reviews may still exist in databases seeded earlier.
 - Image URL validation accepts any HTTPS host.
-- No Content-Security-Policy in the client; no React error boundary.
+- No Content-Security-Policy in the client. **No React error boundary: this is Issue #23, still outstanding.** No `ErrorBoundary` component exists in `client/src` (checked 2026-11-26).
 
 Data and content:
 - Order records created before the image change still store the old Unsplash photo URLs in their item snapshots (8 items in 6 orders
@@ -232,14 +277,16 @@ Tooling:
   during the session and were restarted, so they are not persistent.
 - A second MongoDB instance used for tests was on port 27019 (standalone). The original development instance on port 27017 held
   the `vortex` and `vortex_playground` databases.
+- A throwaway replica set for tests was started on port 27020 (`mongod --replSet rs0 --port 27020 --dbpath C:\data\vortex-rs`, test URI `vortex_test?replicaSet=rs0`), recorded in CHANGELOG 2026-11-24. It must be running for replica-set tests and may have stopped after a restart. Its running state on 2026-11-26 was not checked.
 - Local-only directories that are not in the repository: `C:\data\vortex-test-baseline`, `C:\data\vortex-test-rs0`,
   `C:\data\vortex-image-sync-backup` (database backup from the image sync).
 
 ## 13. Next steps (in order, owner-approved only)
 
+0. Owner review of the uncommitted Issue #27–#30 and README changes (section 0). Keep them in the working tree until the owner decides; nothing has been committed or pushed.
 1. Run the checks in section 4 on a clean clone and record the exact output.
 2. Run the server suite against a replica set (`MONGO_TEST_URI` with `replicaSet=rs0`) on the current code.
 3. Decide the order-snapshot image question and the old `vortex` database question.
 4. Add the CC BY credits to the storefront.
 5. Fix the broken `images:apply` script or remove it from `package.json`.
-6. Work through section 11 by priority, one item at a time, with a test for each fix.
+6. Issue #23 (React Error Boundary) is outstanding and not started. Then work through section 11 by priority, one item at a time, with a test for each fix.

@@ -16,7 +16,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <Ctx.Provider value={{ toast }}>
       {children}
-      <div className="fixed bottom-4 left-4 right-4 z-[100] flex flex-col items-center gap-2 sm:left-auto sm:right-6 sm:items-end" aria-live="polite">
+      <div className="fixed bottom-4 max-lg:bottom-[var(--toast-bottom-mobile,1rem)] left-4 right-4 z-[100] flex flex-col items-center gap-2 sm:left-auto sm:right-6 sm:items-end" aria-live="polite">
         {items.map((t) => (
           <div key={t.id} className="flex w-full max-w-sm animate-fade-up items-center gap-3 rounded-lg bg-neutral-900 px-4 py-3 text-sm text-white shadow-2xl">
             {t.type === 'success' ? <CheckCircle2 size={18} className="shrink-0 text-brand" /> : <AlertCircle size={18} className="shrink-0 text-red-400" />}

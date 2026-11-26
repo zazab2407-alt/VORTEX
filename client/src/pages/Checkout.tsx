@@ -49,6 +49,9 @@ export default function Checkout() {
   const done = useRef(false);       // set once the order exists, so emptying the cart does not bounce us to /cart
   const key = useRef(newKey());
   const prefilled = useRef(false);
+  // Element id to focus once React has rendered the feedback it refers to (server field error or 409 alert)
+  const focusAfterRender = useRef<string | null>(null);
+  const barRef = useRef<HTMLDivElement>(null);
 
   // Logged-in customers: fill in what we already know (never overwrites anything they typed)
   useEffect(() => {
@@ -57,10 +60,40 @@ export default function Checkout() {
     setForm((f) => ({ ...f, fullName: f.fullName || user.name, email: f.email || user.email, phone: f.phone || user.phone, city: f.city || user.city, address: f.address || user.address }));
   }, [user]);
 
+  // Focus server feedback only after React has rendered it. Runs after every render; does nothing unless a target was requested.
+  useEffect(() => {
+    const id = focusAfterRender.current;
+    if (!id) return;
+    focusAfterRender.current = null;
+    document.getElementById(id)?.focus();
+  });
+
+  // Mobile only: lift toasts above the fixed Place order bar, using the bar's real height (it grows when the reason line shows).
+  // The variable is removed on unmount, so other pages keep the default toast position.
+  useEffect(() => {
+    const root = document.documentElement;
+    const bar = barRef.current;
+    if (!bar) return;
+    const apply = () => root.style.setProperty('--toast-bottom-mobile', `${Math.ceil(bar.getBoundingClientRect().height) + 16}px`);
+    apply();
+    const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(apply) : null;
+    observer?.observe(bar);
+    return () => {
+      observer?.disconnect();
+      root.style.removeProperty('--toast-bottom-mobile');
+    };
+  }, []);
+
   if (items.length === 0 && !done.current) return <Navigate to="/cart" replace />;
 
   const set = (k: keyof Form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => { setForm((f) => ({ ...f, [k]: e.target.value })); setErrors((x) => ({ ...x, [k]: undefined })); };
   const blocked = !quote || quote.hasIssues || !!error;
+  // Why the mobile bar's button is disabled. Same conditions as `blocked`, so a disabled button always has a reason. Hidden while submitting.
+  const blockedReason: 'loading' | 'error' | 'issues' | null = submitting ? null
+    : error ? 'error'
+    : quote?.hasIssues ? 'issues'
+    : !quote ? 'loading'
+    : null;
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -94,12 +127,14 @@ export default function Checkout() {
         toast(err.message, 'error');
       } else if (err instanceof ApiClientError && err.status === 409) {
         setIssues(fe?.length ? fe.map((x) => x.message) : [err.message]);
+        focusAfterRender.current = 'co-issues';
         reload(); // refresh prices and stock so the cart shows what is really available
       } else if (fe?.length) {
         const mapped: Partial<Record<keyof Form, string>> = {};
         fe.forEach((x) => { const k = FIELD_MAP[x.field]; if (k) mapped[k] = x.message; });
         setErrors(mapped);
         if (!Object.keys(mapped).length) toast((err as Error).message, 'error');
+        else focusAfterRender.current = `co-${Object.keys(mapped)[0]}`; // first field the server rejected, scrolled into view
       } else toast((err as Error).message, 'error');
       inFlight.current = false; setSubmitting(false);
     }
@@ -107,12 +142,12 @@ export default function Checkout() {
 
   const lines = quote?.lines ?? [];
   return (
-    <div className="container-x py-8 lg:py-12">
+    <div className="container-x py-8 max-lg:pb-[calc(8rem+env(safe-area-inset-bottom))] lg:py-12">
       <h1 className="mb-8 text-5xl font-extrabold sm:text-6xl">Checkout</h1>
-      <form onSubmit={submit} noValidate className="grid gap-10 lg:grid-cols-[1fr_420px]">
+      <form id="checkout-form" onSubmit={submit} noValidate className="grid gap-10 max-lg:grid-cols-1 lg:grid-cols-[1fr_420px]">
         <div className="space-y-10">
           {issues.length > 0 && (
-            <div role="alert" className="border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+            <div id="co-issues" tabIndex={-1} role="alert" className="border border-red-200 bg-red-50 p-4 text-sm text-red-800 focus:outline-none">
               <p className="flex items-center gap-2 font-semibold"><AlertTriangle size={18} /> Some items changed while you were checking out</p>
               <ul className="mt-2 list-disc pl-6">{issues.map((m, i) => <li key={i}>{m}</li>)}</ul>
               <Link to="/cart" className="mt-3 inline-block font-semibold underline underline-offset-4">Review your cart</Link>
@@ -173,11 +208,30 @@ export default function Checkout() {
             <div className="flex justify-between"><dt>Shipping</dt><dd className="font-semibold">{quote ? (quote.shipping === 0 ? 'Free' : formatPrice(quote.shipping)) : '-'}</dd></div>
             <div className="flex justify-between border-t border-neutral-300 pt-3 text-xl font-bold"><dt>Total</dt><dd>{quote ? formatPrice(quote.total) : '-'}</dd></div>
           </dl>
-          <button className="btn btn-primary mt-6 w-full" disabled={submitting || blocked}>{submitting ? 'Placing your order...' : <><Lock size={16} /> Place order{quote ? ` · ${formatPrice(quote.total)}` : ''}</>}</button>
+          <button className="btn btn-primary mt-6 w-full max-lg:hidden" disabled={submitting || blocked}>{submitting ? 'Placing your order...' : <><Lock size={16} /> Place order{quote ? ` · ${formatPrice(quote.total)}` : ''}</>}</button>
           {quote?.hasIssues && <p className="mt-2 text-center text-xs text-red-600">Some items are unavailable. <Link to="/cart" className="underline">Review your cart</Link>.</p>}
           <p className="mt-3 text-center text-xs text-neutral-500">You pay the courier in cash on delivery. <Link to="/cart" className="underline">Edit cart</Link></p>
         </aside>
       </form>
+
+      {/* Mobile only: total and Place order stay reachable while the customer fills in the form */}
+      <div ref={barRef} className="fixed inset-x-0 bottom-0 z-30 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-neutral-200 bg-white px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-4px_12px_rgba(0,0,0,0.08)] max-[359px]:gap-3 lg:hidden">
+        {blockedReason && (
+          <p id="checkout-blocked-reason" role="status" className="w-full text-sm text-neutral-700">
+            {blockedReason === 'loading' && 'Calculating your total…'}
+            {blockedReason === 'error' && <>We couldn&apos;t check your cart. <button type="button" onClick={() => reload()} className="font-semibold text-brand underline underline-offset-4">Try again</button></>}
+            {blockedReason === 'issues' && <>Some items are unavailable. <Link to="/cart" className="font-semibold text-brand underline underline-offset-4">Review your cart</Link>.</>}
+          </p>
+        )}
+        <div className="min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">Total</p>
+          <p className="font-display text-2xl font-bold max-[359px]:text-xl">{quote ? formatPrice(quote.total) : '-'}</p>
+        </div>
+        <button type="submit" form="checkout-form" className="btn btn-primary shrink-0 max-[359px]:px-4" disabled={submitting || blocked}
+          aria-describedby={blockedReason ? 'checkout-blocked-reason' : undefined}>
+          {submitting ? 'Placing your order...' : <><Lock size={16} /> Place order</>}
+        </button>
+      </div>
     </div>
   );
 }
