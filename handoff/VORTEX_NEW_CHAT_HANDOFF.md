@@ -5,8 +5,10 @@ It describes the project as it is now. Anything not marked as verified has not b
 
 ## 0. Read first: uncommitted local work (do not overwrite)
 
-As of 2026-11-26, `git status` (read-only) shows these tracked files modified and **not committed**. HEAD is
-`1141469aec33c3322b3d382d26ba248d3644d5e9` on branch `project-sync/full-project`. Details: `handoff/CHANGELOG.md`, entry dated 2026-11-26.
+As of 2026-11-27, `git status` (read-only) shows only the five Issue #23 files (Group C below: 2 modified, 3 untracked) as uncommitted source changes. HEAD is
+`9348ff4f124eae6ff38facfe717d3d17c3c9cbe1` ("Fix wishlist, mobile navigation and checkout UX") on branch `project-sync/full-project`, the same commit as `origin/project-sync/full-project`.
+Issues #27 to #30 and `README.md` (Groups A and B below) are **already committed in `9348ff4`**; the list and Groups A and B below record the 2026-11-26 state, when HEAD was `1141469`, and are kept as history.
+Details: `handoff/CHANGELOG.md`, entries dated 2026-11-26 and 2026-11-27.
 
 All 7 modified tracked files: `client/src/services/api.ts`, `client/src/components/Navbar.tsx`, `client/src/pages/Checkout.tsx`,
 `client/src/components/Reveal.tsx`, `README.md` (5 pre-existing, from earlier work); `handoff/VORTEX_NEW_CHAT_HANDOFF.md`,
@@ -29,12 +31,26 @@ All 7 modified tracked files: `client/src/services/api.ts`, `client/src/componen
 | `handoff/VORTEX_NEW_CHAT_HANDOFF.md` | This section 0 and the corrections to sections 1, 3, 4, 6, 9, 10, 11, 12 and 13 | Modified, uncommitted, not accepted by the owner |
 | `handoff/CHANGELOG.md` | A 2026-11-26 entry appended at the end; no earlier entries edited | Modified, uncommitted, not accepted by the owner |
 
+**Group C: Issue #23, React Error Boundary (documented 2026-11-27).** Implemented, verified and accepted by the owner. **Not committed and not pushed to GitHub.** The Git states below are from `git status --short` on 2026-11-27. Details: `handoff/CHANGELOG.md`, entry dated 2026-11-27.
+
+| File | Git state | What changed | Verification |
+|---|---|---|---|
+| `client/src/components/ErrorBoundary.tsx` | Untracked (new file) | Class Error Boundary (`getDerivedStateFromError`, `componentDidCatch`). Fallback: "Something went wrong", Try Again, Reload Page, Back to Store. Technical details only in development. `console.error` with the component stack. Imports no router or context | Client tests 78/78; `tsc -b` and `npm run build` exit 0; headless Chrome 60/60 |
+| `client/src/utils/errorBoundary.ts` | Untracked (new file) | JSX-free logic: normalising thrown values, chunk-load error detection, reset-key logic, user-facing messages (details only when `isDev`), log heading | Covered by `errorBoundary.test.mjs` |
+| `client/src/main.tsx` | Modified | Outermost boundary around `<App />` inside `React.StrictMode`, so it also covers every provider | Headless Chrome (provider crash) |
+| `client/src/components/Layout.tsx` | Modified | Route boundary around `<Outlet />` only, `resetKey={pathname}`, "Back to Store" as a router `Link`. Navbar, AnnouncementBar, Footer and CartDrawer stay outside it | Headless Chrome (page crash) |
+| `client/tests/errorBoundary.test.mjs` | Untracked (new file) | 31 Node-runner tests: error state, reset behaviour, chunk-load detection, no raw errors in production, wiring and safety source checks | Part of the 78/78 |
+
+**Deliberate limitation (not an unfinished part of Issue #23):** the admin routes (`/admin/*`) are not rendered inside `Layout`, so they rely on the outermost boundary. A crash inside an admin route therefore shows the full-page fallback instead of keeping the admin layout.
+
+**Status note (2026-11-27, from `git status` and `git ls-remote`):** HEAD is now `9348ff4` ("Fix wishlist, mobile navigation and checkout UX"), and `origin/project-sync/full-project` is at the same commit. Groups A and B above were written when HEAD was `1141469`; today `git status` shows no modification to those files, so they are no longer uncommitted. They are kept above unchanged as the record of that work. The only uncommitted source changes today are the five Issue #23 files in Group C (plus the documentation edits that record them).
+
 **Warnings for the next session:**
 - Do **not** run `git checkout`, `git reset`, `git stash`, `git clean`, or any command that discards these changes. Run `git status` and `git diff` first.
 - None of these changes has been committed, pushed, merged or reviewed by the owner. The owner has not run them as far as this record shows.
 - The four source files in Group A are in `client/src`. Keep their current content unless the owner asks for a change.
 - The untracked `.tmp-*` files in the repository root and in `server/` predate this work; their origin is not recorded here. Do not delete them without owner approval.
-- Issue #23 (React Error Boundary) is still outstanding and has not been started.
+- Issue #23 (React Error Boundary) is implemented, verified and accepted by the owner, but **uncommitted** (Group C above). It is no longer outstanding.
 
 ## 1. What VORTEX is
 
@@ -72,7 +88,7 @@ client/
   src/
     App.tsx, main.tsx, index.css
     components/  pages/ (incl. pages/admin/)  context/  data/  hooks/  services/  types/  utils/
-  tests/                       safeNext.test.mjs (client unit tests, 47 tests in the client suite)
+  tests/                       safeNext.test.mjs, errorBoundary.test.mjs (client unit tests, 78 tests in the client suite)
 server/
   package.json, package-lock.json, .env.example
   scripts/
@@ -215,7 +231,7 @@ SMTP is optional: without it, order emails are skipped and the contact form repo
 
 **Results recorded in this handoff (historical unless dated 2026-11-26):**
 - Server, standalone MongoDB: 428 tests, 425 passed, 0 failed, 3 skipped (the replica-set-only transaction tests). Earlier session, **historical**; not re-run on 2026-11-26.
-- Client: 47 tests, 47 passed (**re-run 2026-11-26**, `npm test`). `npx tsc -b` exit 0 and `npm run build` exit 0 (**re-run 2026-11-26**, after the Issue #30 change).
+- Client: 78 tests, 78 passed (`npm test`, run for Issue #23: the earlier 47 plus 31 new tests in `errorBoundary.test.mjs`). `npx tsc -b` exit 0 (run as the first step of `npm run build`) and `npm run build` exit 0 (run for Issue #23). Headless Chrome check of the error boundaries: 60/60 passed (production build and development mode, desktop and 375px mobile viewport; Chrome only).
 - Latest recorded replica-set server run: the Multer step, CHANGELOG 2026-11-24: 421 tests, 421 passed, 0 failed, 0 skipped. **Not re-run on 2026-11-26.** The Issue #27–#30 changes are client-only and have no server tests.
 - Earlier, a replica-set run (`rs0`) on an earlier code state: all three transaction tests passed; the only failure then was an
   outdated seed image assertion, since fixed.
@@ -251,7 +267,9 @@ Security and data integrity:
 - The seed resets data in `vortex_playground` (via the CLI) and in any `vortex_test_<name>` database when `seedCatalog` is called directly (as the tests do). The guard is by name only.
 - Some old demo reviews may still exist in databases seeded earlier.
 - Image URL validation accepts any HTTPS host.
-- No Content-Security-Policy in the client. **No React error boundary: this is Issue #23, still outstanding.** No `ErrorBoundary` component exists in `client/src` (checked 2026-11-26).
+- No Content-Security-Policy in the client.
+- React Error Boundary (Issue #23): **implemented and verified, but uncommitted** (section 0, Group C). Deliberate limitation: admin routes (`/admin/*`) are not rendered inside `Layout`, so they rely on the outermost boundary; a crash inside an admin route shows the full-page fallback instead of keeping the admin layout. Tested in Chrome only (not Firefox, Safari or real devices).
+- Separate issue, not part of #23 and not started: `useLocalStorage.ts` does not validate the shape of saved data. Corrupt `vortex_cart` or `vortex_wishlist` data still makes the providers throw; the outermost boundary now shows a fallback instead of a blank page, but Try Again and Reload Page cannot recover until the saved data is cleared.
 
 Data and content:
 - Order records created before the image change still store the old Unsplash photo URLs in their item snapshots (8 items in 6 orders
@@ -283,10 +301,10 @@ Tooling:
 
 ## 13. Next steps (in order, owner-approved only)
 
-0. Owner review of the uncommitted Issue #27–#30 and README changes (section 0). Keep them in the working tree until the owner decides; nothing has been committed or pushed.
+0. Owner review of the uncommitted Issue #23 changes (section 0, Group C). Keep them in the working tree until the owner decides whether to commit and push them; nothing has been committed or pushed.
 1. Run the checks in section 4 on a clean clone and record the exact output.
 2. Run the server suite against a replica set (`MONGO_TEST_URI` with `replicaSet=rs0`) on the current code.
 3. Decide the order-snapshot image question and the old `vortex` database question.
 4. Add the CC BY credits to the storefront.
 5. Fix the broken `images:apply` script or remove it from `package.json`.
-6. Issue #23 (React Error Boundary) is outstanding and not started. Then work through section 11 by priority, one item at a time, with a test for each fix.
+6. Issue #23 (React Error Boundary) is implemented and verified but uncommitted: the owner decides when to commit and push it (section 0, Group C). Then work through section 11 by priority, one item at a time, with a test for each fix.

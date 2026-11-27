@@ -599,3 +599,51 @@ The changes below exist only in the working tree of `F:\vortex`. Nothing has bee
 
 - No Issue #23 (React Error Boundary) work. It remains outstanding.
 - Nothing committed, pushed, merged, reset, checked out or stashed. The `.tmp-*` files in the repository root and `server/` were not touched.
+
+## 2026-11-27 — Issue #23 React Error Boundary (local, UNCOMMITTED, not pushed)
+
+The changes below exist only in the working tree of `F:\vortex`. **They are uncommitted local changes and have not been pushed to GitHub.** HEAD is `9348ff4` on branch `project-sync/full-project`, the same commit as `origin/project-sync/full-project`. Issue #23 was formally accepted by the owner after the verification below.
+
+### Issue #23 — React Error Boundary
+
+- Status: IMPLEMENTED, VERIFIED and ACCEPTED by the owner. UNCOMMITTED. Files, with their `git status --short` state on 2026-11-27:
+  - `client/src/components/ErrorBoundary.tsx`: untracked (new file).
+  - `client/src/utils/errorBoundary.ts`: untracked (new file).
+  - `client/tests/errorBoundary.test.mjs`: untracked (new file).
+  - `client/src/main.tsx`: modified.
+  - `client/src/components/Layout.tsx`: modified.
+- Cause: no Error Boundary existed in `client/src`. An error thrown while rendering (or in a lifecycle or effect, or a failed lazy chunk) unmounted the whole React tree and left a blank page. `ErrorState` only covers failed API requests, not render errors.
+- Change:
+  - Outermost boundary: `main.tsx` wraps `<App />` (inside `React.StrictMode`), so it also covers every provider. Its fallback imports no router or context; "Back to Store" is a plain `<a href="/">`.
+  - Route boundary: `Layout.tsx` wraps only `<Outlet />` in `<ErrorBoundary scope="route" resetKey={pathname}>`, with "Back to Store" as a router `Link`. Navbar, AnnouncementBar, Footer and CartDrawer stay outside it. A change of `location.pathname` resets the boundary.
+  - Fallback: "Something went wrong", Try Again, Reload Page and Back to Store. Technical details (error and component stack) are shown only when `import.meta.env.DEV` is true; production shows fixed text and never the raw error message. Chunk-load errors (a failed lazy import, for example after a deploy) get a reload-oriented message and Reload Page as the primary button.
+  - Logging: `console.error` in `componentDidCatch` with a `[VORTEX] <scope> error boundary caught` heading and the component stack. No monitoring service, network request or reporting endpoint.
+  - Recovery and safety: no automatic reload (Reload Page only reloads on a click, so no reload loop is possible); Try Again clears the error and keeps the route; cart and wishlist data are never cleared or read. `useLocalStorage.ts` was not changed.
+  - `errorBoundary.ts` holds the JSX-free logic so the plain Node test runner can import it.
+- Deliberate limitation (not an unfinished part of Issue #23): the admin routes (`/admin/*`) are not rendered inside `Layout`, so they rely on the outermost boundary. A crash inside an admin route shows the full-page fallback instead of keeping the admin layout.
+- Not changed, separate issue: shape validation in `useLocalStorage.ts`. Corrupt `vortex_cart` or `vortex_wishlist` data still makes the providers throw. The outermost boundary now shows a fallback instead of a blank page, but Try Again and Reload Page cannot recover until the saved data is cleared.
+
+### Verification (Issue #23)
+
+- Client `npm test`: **78/78 passed**, 0 failed, 0 skipped (the earlier 47 tests plus 31 new tests in `client/tests/errorBoundary.test.mjs`).
+- `tsc -b`: **exit code 0** (run as the first step of `npm run build`).
+- `npm run build`: **exit code 0**.
+- Headless Chrome: **60/60 checks passed**, 30 against a production build and 30 against the Vite development server, at a desktop viewport and at a 375px mobile viewport. The harness was temporary, lived outside the repository (system temp folder) and has been deleted. It ran the real `client/src` with a stub API. Covered: a provider crash (corrupt saved cart) shows the full-page fallback; a page crash (malformed product data) shows the route fallback with Navbar and Footer visible; Try Again with the cause still present and after it is fixed; route navigation resets the boundary; Reload Page reloads once with no loop; a blocked admin chunk shows the reload message and recovers; production hides raw errors; development shows details; no horizontal overflow at 375px; a control page without the boundary shows a blank screen for the same crash.
+- Limits: Chrome only (no Firefox, Safari or real devices). Screenshots were taken but not reviewed visually; layout was checked by measurement. The harness used its own Vite configuration and a stub API, so its bundle is not byte-identical to `npm run build`.
+- Not run: server tests (no backend change), the database-backed suites (`MONGO_TEST_URI` is not set).
+
+### Documentation changes (this entry)
+
+- `handoff/CHANGELOG.md`: this entry appended; no earlier entry edited.
+- `handoff/VORTEX_NEW_CHAT_HANDOFF.md`: section 0 (Group C added, status note added, the Issue #23 line updated), section 10 (client test result), section 11 (Issue #23 bullet) and section 13 (item 6).
+- Both documentation files are also uncommitted.
+
+### Corrections to earlier entries (history not rewritten)
+
+- **2026-11-26 entry above (Issues #27 to #30 and README, "UNCOMMITTED", HEAD `1141469`):** superseded for the commit state. On 2026-11-27 HEAD is `9348ff4`, `git status` shows no modification to those files, and `origin/project-sync/full-project` points at the same commit. The entry is kept as the record of that work.
+- **2026-11-26 entry, "Not done: No Issue #23 work. It remains outstanding.":** superseded by this entry.
+
+### Not done
+
+- Nothing committed, pushed, merged, reset, checked out or stashed. Nothing staged.
+- The `.tmp-*` files in the repository root and `server/` were not touched.
