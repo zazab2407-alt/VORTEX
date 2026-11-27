@@ -647,3 +647,16 @@ The changes below exist only in the working tree of `F:\vortex`. **They are unco
 
 - Nothing committed, pushed, merged, reset, checked out or stashed. Nothing staged.
 - The `.tmp-*` files in the repository root and `server/` were not touched.
+
+## 2026-11-27 — Issue #23 committed locally (NOT pushed)
+
+Follow-up to the Issue #23 entry above, which describes the state before this commit (it says "UNCOMMITTED"; kept unchanged as history).
+
+- Commit: `29720e1` (full hash `29720e161885a62d7c73423441b624231f218d56`) on branch `project-sync/full-project`.
+- Commit message: `Add outermost and route-level React Error Boundaries (Issue #23)`
+- Author: `Zeyad Tharwat <227698418+zazab2407-alt@users.noreply.github.com>`.
+- Contents, exactly 7 files (421 insertions, 11 deletions): `client/src/components/ErrorBoundary.tsx`, `client/src/utils/errorBoundary.ts`, `client/src/components/Layout.tsx`, `client/src/main.tsx`, `client/tests/errorBoundary.test.mjs`, `handoff/CHANGELOG.md`, `handoff/VORTEX_NEW_CHAT_HANDOFF.md`.
+- **Not pushed to GitHub.** The local branch is 1 commit ahead of `origin/project-sync/full-project`, which is still at `9348ff4` (checked with `git ls-remote`).
+- History: the commit was first created as `d84c2d9` and then amended locally into `29720e1` (same 7 files; the author email changed from the `YOUR_EMAIL` placeholder to the GitHub noreply address). `d84c2d9` was never pushed and remains only in the local reflog. The two documentation files inside the commit were written before it existed, so their text says "uncommitted"; the handoff file was updated after the commit to say committed locally.
+- Documentation-only follow-up: no application code, tests or configuration changed, and no tests or builds were re-run for this entry. The test and browser results in the Issue #23 entry above still apply to the committed code.
+- The 14 untracked `.tmp-*` files were not touched.
